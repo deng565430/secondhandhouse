@@ -4,14 +4,14 @@
       <div class="confirm-wrapper">
         <div class="confirm-content">
           <div class="title">
-            <h2>{{'附言'}}</h2>
+            <h2>{{titleMsg}}</h2>
           </div>
           <div class="hint">
             <p>提示：</p>
-            <span>响应后对方将获得您的联系方式以便及时沟通!</span>
+            <span>{{hintMsg}}</span>
           </div>
           <div class="textarea">
-            <textarea placeholder="">有这个地区的楼盘吗？请及时联系！</textarea>
+            <textarea placeholder="">{{sendMsg}}</textarea>
           </div>
           <div class="operate">
             <div @click="cancel" class="operate-btn left">{{cancelBtnText}}</div>
@@ -26,6 +26,18 @@
 <script type="text/ecmascript-6">
   export default {
     props: {
+      titleMsg: {
+        type: String,
+        default: '附言'
+      },
+      hintMsg: {
+        type: String,
+        default: '响应后对方将获得您的联系方式以便及时沟通!'
+      },
+      sendMsg: {
+        type: String,
+        default: '有这个地区的楼盘吗？请及时联系!'
+      },
       confirmBtnText: {
         type: String,
         default: '确定'
