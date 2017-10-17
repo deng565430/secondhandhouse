@@ -1,25 +1,29 @@
 <template>
   <div>
-    <div class="project-list" v-if="projectList.length">
+    <div class="project-list">
         <ul>
-          <li class="item" v-for="item in projectList">
-            <div class="item-right">
-              <router-link :to="`/detail/${encodeURIComponent(item.project_name)}` " class="item-center">
-                <div class="item-title">
-                  <h2><span>{{item.project_name}}</span> <span>{{item.district}}</span></h2>
-                  <div>
-                    <div>
-                      <p>成交套数： <span>{{item.count || '暂无'}}</span></p>
-                      <p>平均总价： <span>{{item.total_price + '万元' || '暂无'}} </span></p>
-                    </div>
-                    <div>
-                      <p>平均单价： <span>{{item.price + ' 元' || '暂无'}}</span> </p>
-                      <p>物业类型： <span>{{item.uses || '暂无'}}</span></p>
-                    </div>
-                  </div>
-                </div>
-              </router-link>
-            </div>  
+          <li class="item">
+            <router-link :to="'/detail/1'" tag="div" >
+              <div class="item-top">
+                <p>上海</p>
+                <p>曹阳</p>
+                <p>二室一厅</p>
+                <p>500万</p>
+              </div>
+              <div class="item-center">
+                <p>中原小李</p>
+                <p>13000000000</p>
+                <p>别墅</p>
+                <p><i class="icon-people2"></i></p>
+              </div>
+              <div class="item-bottom">
+                <p>已响应2人</p>
+                <p>
+                  <span class="btn" @click.stop="backList">拉黑 <i class="icon-blacklist"></i></span>
+                  <span class="btn bgc" @click.stop="sendMsg">我有客源 <i class="icon-phone"></i></span>
+                </p>
+              </div>
+            </router-link>
           </li>
         </ul>
       </div>
@@ -34,61 +38,61 @@
         default: []
       }
     },
-    methods: {}
+    methods: {
+      sendMsg () {
+        this.$emit('alertMsg')
+      },
+      backList () {
+        this.$emit('blackMsg')
+      }
+    }
   }
 </script>
 
 <style scoped lang="stylus" rel="stylesheet/stylus">
   @import "~common/stylus/variable"
+  @import "~common/stylus/mixin"
   .project-list
     .item
-      margin-top: 10px
-      .item-right
-        display: inline-block
-        box-sizing: border-box
-        width: 100%
-        .item-center
-          font-size: $font-size-medium
-          width: 100%
+      background: #fff
+      margin: 0 5px 10px 5px
+      padding: 10px
+      .item-top, .item-center
+        display: flex
+        justify-content: space-around
+        p
+          line-height: 3
+          text-align: center
+          font-size: $font-size-small
+          no-wrap()
+      .item-center
+        p:nth-child(2)
+          width: 30%
+      .item-bottom
+        display: flex
+        p:first-child
+          width: 100px
+          line-height: 3
+          text-align: left
+          no-wrap()
+        p:last-child
           box-sizing: border-box
-          .item-title
-            margin: 0 10px
-            background: #fff
+          padding-top: 10px
+          width: 100%
+          span
+            float: right
+            margin: 0 5px
+          .btn
+            display: inline-block
+            padding: 5px 10px
             border-radius: 4px
-            overflow: hidden
-            h2
-              font-size: $font-size-large
-              height: 40px
-              background: #fe843e
-              width: 100%
-              line-height: 40px
-              color: white
-              box-sizing: border-box
-              display: flex
-              padding: 0 10px
-              span
-                width: 50%
-                box-sizing: border-box
-                &:last-child
-                  text-align: right
-            >div
-              display: flex
-              padding: 30px 0
-              div
-                width: 50%
-                box-sizing: border-box
-                border-right: 1px solid #eee
-                padding-left: 20px
-                &:last-child
-                  border-right: none
-                p
-                  width: 100%
-                  line-height: 20px
-                  font-size: $font-size-medium
-                  text-overflow: ellipsis
-                  white-space: nowrap
-                  overflow: hidden
-                  box-sizing: border-box
-                  span
-                    color: #ff7242
+            border: 1px solid black
+            i
+              color: #000
+          .bgc
+            background: #e5672c
+            border: 1px solid #e5672c
+            color: #fff
+            i
+              color: #fff
 </style>

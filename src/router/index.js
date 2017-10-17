@@ -16,6 +16,18 @@ const AddProject = (resolve) => {
   })
 }
 
+const SearchList = (resolve) => {
+  import('components/search/search').then((module) => {
+    resolve(module)
+  })
+}
+
+const MyProjectList = (resolve) => {
+  import('components/projectlist/projectlist').then((module) => {
+    resolve(module)
+  })
+}
+
 export default [
   {
     path: '/',
@@ -25,12 +37,20 @@ export default [
     component: RecommendList,
     name: 'recommendList'
   }, {
-    path: '/addProject',
-    name: 'addProject',
+    path: '/addproject',
+    name: 'addproject',
     component: AddProject
   }, {
     path: '/detail/:pro',
     name: 'detail',
     component: Details
+  }, {
+    path: '/search',
+    name: 'search',
+    component: SearchList
+  }, {
+    path: '/projectlist',
+    name: 'projectlist',
+    component: MyProjectList
   }
 ]

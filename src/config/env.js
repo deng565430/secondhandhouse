@@ -2,7 +2,7 @@
 // baseUrl: 域名地址
 
 let baseUrl
-let routerMode = 'history' // hash history
+let routerMode = 'hash' // hash history
 let imgBaseUrl = ''
 
 if (process.env.NODE_ENV === 'development') {
