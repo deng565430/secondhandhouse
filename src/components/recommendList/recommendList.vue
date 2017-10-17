@@ -23,8 +23,11 @@
         <li v-for="(item, index) in itemSelectType" :class="itemSelectTypeActive === index ? 'active' : ''" @click="selectTypeList(item, index)"><span>{{item.type}}</span> <i :class="[itemSelectTypeActive === index ? 'icon-back-down': 'icon-back-up']"></i></li>
       </ul>
     </div>
+  <div>
+    <select-box v-if="showCitysList" @showCitysListEvent="showCitysListEvent"></select-box>
   </div>
-  <scroll ref="scroll" class="list" data="projectList">
+  </div>
+  <scroll ref="scroll" class="list" :data="projectList">
     <div>
       <recommend-list :projectList="projectList" @alertMsg="alertMsg"  @blackMsg="blackMsg"></recommend-list>
     </div>
@@ -42,6 +45,7 @@ import Scroll from 'base/scroll/scroll'
 import RecommendList from 'base/recommend-list/recommend-list'
 import ConfirmMsg from 'base/confirm-msg/confirm-msg'
 import Confirm from 'base/confirm/confirm'
+import SelectBox from 'base/select-box/select-box'
 export default {
   data () {
     return {
@@ -58,14 +62,25 @@ export default {
       itemSelectTypeActive: -1,
       confirmMsgText: '',
       confirmText: '',
-      refresh: false
+      refresh: false,
+      showCitysList: false
     }
   },
   methods: {
     houseListEvent (item, index) {
       this.houseListActive = index
     },
-    selectTypeList () {},
+    // 区域条件筛选
+    selectTypeList (item, index) {
+      console.log(index)
+      this.itemSelectTypeActive = index
+      if (index === 0) {
+        this.showCitysList = true
+      }
+    },
+    showCitysListEvent () {
+      this.showCitysList = false
+    },
     // 发送客源消息
     alertMsg () {
       this.$refs.confirmMsg.show()
@@ -85,7 +100,8 @@ export default {
     ConfirmMsg,
     Scroll,
     RecommendList,
-    Confirm
+    Confirm,
+    SelectBox
   }
 }
 </script>

@@ -5,6 +5,7 @@ import {
 
 export default {
   get: function(url) {
+    console.log(baseUrl + url)
     var result = axios({
       method: 'get',
       url: baseUrl + url,

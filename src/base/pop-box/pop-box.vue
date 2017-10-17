@@ -32,7 +32,7 @@
       this.touch = {}
     },
     mounted() {
-      this.$refs.showType.style.top = this.posTop + 2 + 'px'
+      // this.$refs.showType.style.top = this.posTop + 2 + 'px'
     },
     components: {
       Scroll
@@ -63,6 +63,7 @@
   .show-type-list
     position: fixed
     bottom: 0
+    top: 131px
     left: 0
     right: 0
     background: rgba(0, 0, 0, 0.3)
@@ -75,5 +76,5 @@
   .type-list-enter-active, .type-list-leave-active
     transition: all 0.3s
   .type-list-enter, .type-list-leave-to
-    transform: translate3d(100%, 0, 0)             
+    transform: translate3d(100%, 0, 0)
 </style>
