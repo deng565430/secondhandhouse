@@ -2,7 +2,7 @@
   <div>
     <div class="project-list">
         <ul>
-          <li class="item">
+          <li class="item" v-for="item in projectList">
             <router-link :to="'/detail/1'" tag="div" >
               <div class="item-top">
                 <p>上海</p>
@@ -65,6 +65,10 @@
           text-align: center
           font-size: $font-size-small
           no-wrap()
+      .item-top
+        p
+          font-size: $font-size-medium
+          font-weight: 600
       .item-center
         p:nth-child(2)
           width: 30%

@@ -61,7 +61,7 @@
       },
       cancel() {
         this.hide()
-        this.$emit('cancel')
+        this.$emit('cancelMsg')
       },
       confirm() {
         this.hide()

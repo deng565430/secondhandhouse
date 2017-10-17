@@ -24,7 +24,7 @@
       </ul>
     </div>
   </div>
-  <scroll ref="scroll" class="list">
+  <scroll ref="scroll" class="list" data="projectList">
     <div>
       <recommend-list :projectList="projectList" @alertMsg="alertMsg"  @blackMsg="blackMsg"></recommend-list>
     </div>
@@ -54,7 +54,7 @@ export default {
       }, {
         type: '总价'
       }],
-      projectList: [],
+      projectList: [1, 2, 3, 4, 5, 6, 7, 8, 9],
       itemSelectTypeActive: -1,
       confirmMsgText: '',
       confirmText: '',
