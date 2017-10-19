@@ -1,7 +1,8 @@
 <template>
   <transition name="pop-list">
     <div class="pop" v-if="showCitysList" >
-    <pop-box class="provincelist" ref="provincelists" v-if="showCitysList" :typeList="provincelist" @showPopBox="showCityList">
+    <div class="show-type-list" ref="showType">
+        <scroll :pullup="true" class="list" :data="provincelist">
           <div class="pop-city-list" ref="cityList">
              <div  @click.stop.prevent>
                <div class="pop-city-child">
@@ -44,7 +45,8 @@
                </div>
              </div>
           </div>
-        </pop-box>
+        </scroll>
+    </div>
     </div>
   </transition>
 </template>
@@ -137,7 +139,7 @@ export default {
       this.projectName = 'all'
       this.showCitysList = false
       this.projectMsg = false
-      this.$emit('showCitysListEvent')
+      this.$emit('showCitysListEvent', {provinceActive: this.provinceActive, cityActive: this.cityActive, districtlistActive: this.districtlistActive})
     },
     _getProvincelist() {
       if (this.provincelist.length > 1) {
@@ -183,63 +185,61 @@ export default {
   @import "~common/stylus/variable"
   .pop
     position: fixed
-    top: 0
+    top: 131px
     bottom: 0
     right: 0
     left: 0
-    background: $color-background-d
-  .provincelist
-    position: fixed
-    top: 0
-    bottom: 0
-    right: 0
-    left: 0
-    background: $color-background-d
-    width:100%
-    color: black
-    font-size: $font-size-medium
-    .pop-city-list
-      text-align: center
-      position: absolute
-      width: 100%
-      height: 100%
-      z-index: 999
-      height: 100%
-      background: white
-      .pop-city-btn
-        height: 50px
-        background: $color-highlight-background
-        a
-          display: inline-block
-          background #13CE66
-          color: white
-          padding: 10px 20px
-          border-radius: 6px
-      .pop-city-child
-        background: $color-highlight-background
-        padding: 0 2px
+    background: rgba(0, 0, 0, 0.3)
+    .show-type-list
+      .list
+        position: fixed
         width: 100%
-        box-sizing: border-box
-        display: flex
-        justify-content: space-around
-        align-items: flex-start
-        height: 160px
+        height: 230px
         overflow: hidden
-        margin: 10px 0
-        .pop-city-height
-          width: 33%
-          box-sizing: border-box
-          .pop-city-scroll
-            top: 0
-            bottom: 0
+        color: black
+        font-size: $font-size-medium
+        .pop-city-list
+          text-align: center
+          position: absolute
+          width: 100%
+          height: 100%
+          z-index: 999
+          height: 100%
+          background: white
+          .pop-city-btn
+            height: 50px
+            background: $color-highlight-background
+            a
+              display: inline-block
+              background #13CE66
+              color: white
+              padding: 10px 20px
+              border-radius: 6px
+          .pop-city-child
+            background: $color-highlight-background
+            padding: 0 2px
             width: 100%
+            box-sizing: border-box
+            display: flex
+            justify-content: space-around
+            align-items: flex-start
             height: 160px
             overflow: hidden
-        li
-          line-height: 35px
-      .cityActive
-        background : #EA8910
-        color: white
+            margin: 10px 0
+            .pop-city-height
+              width: 33%
+              box-sizing: border-box
+              .pop-city-scroll
+                top: 0
+                bottom: 0
+                width: 100%
+                height: 160px
+                overflow: hidden
+            li
+              line-height: 35px
+          .cityActive
+            background : #EA8910
+            color: white
     .pop-list-child
       background: white
       padding: 10px

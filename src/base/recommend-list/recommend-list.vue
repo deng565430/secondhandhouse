@@ -1,31 +1,39 @@
 <template>
   <div>
-    <div class="project-list">
+    <div class="project-list" v-if="projectList.length">
         <ul>
           <li class="item" v-for="item in projectList">
-            <router-link :to="'/detail/1'" tag="div" >
+            <router-link :to="`/detail/${item.roomId}`" tag="div" >
               <div class="item-top">
-                <p>上海上海上海上海</p>
-                <p>曹阳</p>
-                <p>二室一厅</p>
-                <p>500万</p>
+                <p>{{item.city}}</p>
+                <p>{{item.district}}</p>
+                <p>{{item.huxing}}</p>
+                <p>{{item.totalPrice ? item.totalPrice + '万' : ''}}</p>
               </div>
               <div class="item-center">
-                <p>中原小李中原小李</p>
-                <p>13000000000</p>
-                <p>别墅</p>
-                <p @click.stop="look"><i class="icon-people2"></i></p>
+                <p>{{item.username}}</p>
+                <p>{{item.phone}}</p>
+                <p>{{item.type}}</p>
+                <p @click.stop="look" v-if="item.ismy === 0"><i :class="item.contact === 0 ? 'icon-people' : 'icon-people2'"></i></p>
               </div>
               <div class="item-bottom">
-                <p>已匹配<span>2</span>人</p>
-                <p>
-                  <span class="btn" @click.stop="backList">拉黑 <i class="icon-blacklist"></i></span>
-                  <span class="btn bgc" @click.stop="sendMsg">我有客源 <i class="icon-phone"></i></span>
+                <p v-if="item.count">已匹配 <span> {{item.count}} </span>人</p>
+                <p v-else style="color: #dc4900">等待匹配...</p>
+                <p v-if="item.ismy === 0">
+                  <span v-if="item.contact === 0" class="btn bgc" @click.stop="sendMsg">我有客源 <i class="icon-phone"></i></span>
+                  <span v-else-if="item.match === 0" style="color:red">等待对方回复</span>
+                  <span v-else-if="item.match === 1" style="color:green">查看回复</span>
+                </p>
+                <p v-else>
+                  <span style="color: red">我的项目</span>
                 </p>
               </div>
             </router-link>
           </li>
         </ul>
+      </div>
+      <div v-else style="text-align: center">
+        暂无项目
       </div>
   </div>
 </template>
@@ -41,9 +49,6 @@
     methods: {
       sendMsg () {
         this.$emit('alertMsg')
-      },
-      backList () {
-        this.$emit('blackMsg')
       },
       look () {
         alert('我已联系过')
@@ -81,8 +86,9 @@
         p:first-child
           width: 100px
           line-height: 3
+          font-size: $font-size-small
           text-align: left
-          padding-left: 14px
+          padding-left: 18px
           no-wrap()
           span
             color: #e5672c

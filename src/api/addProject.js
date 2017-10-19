@@ -29,15 +29,14 @@ export function getTypeList () {
   return $api.get(url)
 }
 
-export function sendProject (data) {
-  const url = `/needs/add`
+export function secondHandRoom (data) {
+  const url = '/secondhand/addclientroom'
 
   return $api.post(url, data)
 }
 
-export function getProject (id) {
-  const url = `/needs/getneedById?needsid=${id}`
+export function secondHandSource (data) {
+  const url = '/secondhand/addclientsource'
 
-  return $api.get(url)
+  return $api.post(url, data)
 }
-
