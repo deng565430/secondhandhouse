@@ -12,6 +12,7 @@ var webpack = require('webpack')
 var proxyMiddleware = require('http-proxy-middleware')
 var webpackConfig = require('./webpack.dev.conf')
 var data = require('../data/data.json')
+var data2 = require('../data/contant.json')
 
 // default port where dev server listens for incoming traffic
 var port = process.env.PORT || config.dev.port
@@ -64,6 +65,13 @@ apiRoutes.post('/getCitylist', function (req, res) {
 apiRoutes.post('/getDistirctlist', function (req, res) {
   let datalist = {
     data: ["通州", "如皋", "海安", "如东", "海门", "通州", "如皋", "海安", "如东", "海门"]
+  }
+  res.send(datalist)
+})
+
+apiRoutes.get('/getcontantlist', function (req, res) {
+  let datalist = {
+    data: data2
   }
   res.send(datalist)
 })
