@@ -2,22 +2,22 @@
   <div>
     <div class="project-list">
         <ul>
-          <li class="item">
+          <li class="item" v-for="item in projectList">
             <router-link :to="'/detail/1'" tag="div" >
               <div class="item-top">
-                <p>上海</p>
+                <p>上海上海上海上海</p>
                 <p>曹阳</p>
                 <p>二室一厅</p>
                 <p>500万</p>
               </div>
               <div class="item-center">
-                <p>中原小李</p>
+                <p>中原小李中原小李</p>
                 <p>13000000000</p>
                 <p>别墅</p>
-                <p><i class="icon-people2"></i></p>
+                <p @click.stop="look"><i class="icon-people2"></i></p>
               </div>
               <div class="item-bottom">
-                <p>已响应2人</p>
+                <p>已匹配<span>2</span>人</p>
                 <p>
                   <span class="btn" @click.stop="backList">拉黑 <i class="icon-blacklist"></i></span>
                   <span class="btn bgc" @click.stop="sendMsg">我有客源 <i class="icon-phone"></i></span>
@@ -44,6 +44,9 @@
       },
       backList () {
         this.$emit('blackMsg')
+      },
+      look () {
+        alert('我已联系过')
       }
     }
   }
@@ -65,6 +68,11 @@
           text-align: center
           font-size: $font-size-small
           no-wrap()
+          i
+            color: #e5672c
+      .item-top
+        p
+          font-size: $font-size-medium
       .item-center
         p:nth-child(2)
           width: 30%
@@ -74,7 +82,10 @@
           width: 100px
           line-height: 3
           text-align: left
+          padding-left: 14px
           no-wrap()
+          span
+            color: #e5672c
         p:last-child
           box-sizing: border-box
           padding-top: 10px
