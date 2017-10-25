@@ -10,8 +10,11 @@
             <p>提示：</p>
             <span>{{hintMsg}}</span>
           </div>
+          <div class="error">
+            <p ref="isSuccess">{{success}}</p>
+          </div>
           <div class="textarea">
-            <textarea placeholder="">{{sendMsg}}</textarea>
+            <textarea placeholder="请输入留言内容" @input="textChange" v-model="msg">{{sendMsg}}</textarea>
           </div>
           <div class="operate">
             <div @click="cancel" class="operate-btn left">{{cancelBtnText}}</div>
@@ -36,7 +39,11 @@
       },
       sendMsg: {
         type: String,
-        default: '有这个地区的楼盘吗？请及时联系!'
+        default: ''
+      },
+      msgFlag: {
+        type: Number,
+        default: 1
       },
       confirmBtnText: {
         type: String,
@@ -49,7 +56,9 @@
     },
     data() {
       return {
-        showFlag: false
+        showFlag: false,
+        msg: this.sendMsg,
+        success: ''
       }
     },
     methods: {
@@ -62,10 +71,32 @@
       cancel() {
         this.hide()
         this.$emit('cancelMsg')
+        this.success = ''
+      },
+      textChange () {
+        if (this._trim(this.msg) === '') {
+          this.$refs.isSuccess.style.color = 'red'
+          this.success = '请输入内容!'
+        } else {
+          this.$refs.isSuccess.style.color = 'green'
+          this.success = ''
+        }
       },
       confirm() {
+        if (this._trim(this.msg) === '') {
+          this.success = '请输入内容!'
+          return
+        }
         this.hide()
-        this.$emit('confirmMsg')
+        const data = {
+          msg: this.msg,
+          flag: this.msgFlag
+        }
+        this.$emit('confirmMsg', data)
+        this.success = ''
+      },
+      _trim(str) {
+        return str.replace(/(^\s+)|(\s+$)/g, '')
       }
     }
   }
@@ -80,7 +111,7 @@
     right: 0
     top: 0
     bottom: 0
-    z-index: 998
+    z-index: 99
     background-color: $color-background-d
     &.confirm-fade-enter-active
       animation: confirm-fadein 0.3s
@@ -105,7 +136,7 @@
             font-size: $font-size-large
         .hint
           display:flex
-          padding: 10px 20px
+          padding: 10px 20px 0
           p
             font-size: $font-size-medium
             line-height: 1.2
@@ -113,7 +144,16 @@
             width: 65px
           span
             color: black
+            font-size: $font-size-medium
             line-height: 1.2
+        .error
+          p
+            color: red
+            padding-left: 20px
+            height: 10px
+            font-size: $font-size-medium
+          .issuccess
+            color: green
         .textarea
           padding:10px 20px
           box-sizing: border-box

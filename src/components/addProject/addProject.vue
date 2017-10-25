@@ -121,10 +121,10 @@
             </div>
           </div>
           <div class="item-bg">
-            <div class="item-50">
-              <label class="label-25"><span></span>物业费</label>
+            <div class="item-100">
+              <label class="label-15"><span></span>物业费</label>
               <input type="text" placeholder="请输入" v-model="propertyCosts" name="" value="" class="text">
-              <span>元/平方</span>
+              <span class="label-height">元/平方</span>
             </div>
           </div>
           <div class="item-bg">
@@ -179,7 +179,7 @@
           </div>
           <div class="item-bg">
             <div class="item-50">
-              <label class="label-25"><span></span>绿化率</label>
+              <label class="label-40"><span></span>绿化率</label>
               <select name="" class="select"  v-model="greenRate">
                 <option value="-1">请选择</option>
                 <option value="无">无</option>
@@ -553,7 +553,7 @@ export default {
           display: flex
           height: 30px
           margin-bottom: 10px
-          padding: 0 20%
+          padding: 0 19%
           li
             color: black
             font-size: $font-size-medium
@@ -634,6 +634,13 @@ export default {
               height: 30px
               margin: 0 5px
               border-radius: 4px
+            .label-15
+              width: 15%
+              line-height: 30px
+              span
+                color: red
+            .label-height
+              line-height: 30px
             .label-20
               width: 20%
               line-height: 30px
@@ -649,11 +656,6 @@ export default {
                 border-radius: 4px
                 border: 1px solid #ccc
                 color: #666
-            .label-20
-              width: 20%
-              line-height: 30px
-              span
-                color: red
             .item-right
               line-height: 30px
               width: 10%
