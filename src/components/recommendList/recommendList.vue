@@ -8,12 +8,12 @@
     <div>
       <div class="top-select">
         <router-link tag="div" :to="{ path: '/addproject' }" class="write">
-          <i class="icon-write"></i>
+          <p><i class="icon-write"></i><span>发布</span></p>
         </router-link>
         <ul class="item-list-show xiangying-top">
           <li v-for="(item, index) in houseList" :key="index" :class="houseListActive === index ? 'active' : ''" @click="houseListEvent(item, index)">{{item}}</li>
         </ul>
-        <router-link tag="div" :to="{ path: '/search' }"  class="search">
+        <router-link style="visibility: hidden" tag="div" :to="{ path: '/search' }"  class="search">
           <i class="icon-search"></i>
         </router-link>
       </div>
@@ -56,7 +56,7 @@
       :pullup="true"
       @scrollToEnd="searchMore">
     <div>
-      <recommend-list :projectList="projectList" @alertMsg="alertMsg"></recommend-list>
+      <recommend-list :projectList="projectList" @mark="sendData.mark" @alertMsg="alertMsg" :mark="sendData.mark"></recommend-list>
       <loading v-show="hasMore" title=""></loading>
         <div v-show="!hasMore" class="no-result-wrapper">
           <p>{{noResultWrapper}}</p>
@@ -64,7 +64,7 @@
     </div>
   </scroll>
   <div>
-    <confirm-msg ref="confirmMsg" :text="confirmMsgText" @confirmMsg="isConfirmMsg"></confirm-msg>
+    <confirm-msg :hintMsg="hintMsg" ref="confirmMsg" :text="confirmMsgText" @confirmMsg="isConfirmMsg" :sendMsg="confirmMsgSendMsg"></confirm-msg>
     <confirm ref="confirm" :text="confirmText" :refresh="refresh" @confirm="confirm"></confirm>
   </div>
 </div>
@@ -79,12 +79,13 @@ import ConfirmMsg from 'base/confirm-msg/confirm-msg'
 import Confirm from 'base/confirm/confirm'
 import SelectBox from 'base/select-box/select-box'
 import PopBox from 'base/pop-box/pop-box'
-import { secondhHand } from 'api/recommendList'
+import { secondhHand, addClientResponse } from 'api/recommendList'
 export default {
   data () {
     return {
       houseList: ['房源', '客源'],
       houseListActive: 0,
+      projectId: '',
       itemSelectType: [{
         type: '区域'
       }, {
@@ -97,7 +98,9 @@ export default {
       projectList: [],
       itemSelectTypeActive: -1,
       confirmMsgText: '',
+      hintMsg: '发送消息之后对方可在项目详情里看到您的消息！',
       confirmText: '',
+      confirmMsgSendMsg: '',
       refresh: false,
       showCitysList: false,
       showTypeList: false,
@@ -121,7 +124,7 @@ export default {
         data: 5
       }, {
         type: '其他',
-        data: 0
+        data: null
       }],
       typeListHall: [{
         type: '一厅',
@@ -140,7 +143,7 @@ export default {
         data: 5
       }, {
         type: '其他',
-        data: 0
+        data: null
       }],
       totalPrice: [{
         type: '无',
@@ -206,7 +209,7 @@ export default {
     }
   },
   created () {
-    this._secondhHand(this.sendData)
+    this._secondhHand()
   },
   methods: {
     houseListEvent (item, index) {
@@ -240,7 +243,7 @@ export default {
         /* 长度 */
         length: 10
       }
-      this._secondhHand(this.sendData)
+      this._secondhHand()
       this.hasMore = true
       this.noResultWrapper = '加载更多'
       setTimeout(() => {
@@ -282,6 +285,8 @@ export default {
         console.log(this.selectTypeIndexRoom)
         if (this.selectTypeIndexRoom === -1) {
           this.itemSelectType[this.itemSelectTypeActive].type = '总价'
+          this.sendData.minPrice = null
+          this.sendData.maxPrice = null
         } else {
           this.sendData.minPrice = this.typeList[this.selectTypeIndexRoom].minPrice
           this.sendData.maxPrice = this.typeList[this.selectTypeIndexRoom].maxPrice
@@ -290,17 +295,19 @@ export default {
       } else {
         if (this.selectTypeIndexRoom === -1 && this.selectTypeIndexHall === -1) {
           this.itemSelectType[this.itemSelectTypeActive].type = '户型'
+          this.sendData.room = null
+          this.sendData.hall = null
         } else {
           // 判断所选择的是否包含 '其他'
-          let data = ((((this.room != null ? this.room : '') === '其他' ? '' : this.room) == null ? '' : ((this.room != null ? this.room : '') === '其他' ? '' : this.room)) + (((this.hall != null ? this.hall : '') === '其他' ? '' : this.hall) == null ? '' : ((this.hall != null ? this.hall : '') === '其他' ? '' : this.hall))) === '' ? '其他' : ((((this.room != null ? this.room : '') === '其他' ? '' : this.room) == null ? '' : ((this.room != null ? this.room : '') === '其他' ? '' : this.room)) + (((this.hall != null ? this.hall : '') === '其他' ? '' : this.hall) == null ? '' : ((this.hall != null ? this.hall : '') === '其他' ? '' : this.hall)))
-          console.log(data)
+          let data = ((this.room == null ? '' : this.room) + (this.hall == null ? '' : this.hall)).replace(/其他/, '')
+          data = data === '' ? '其他' : data
           this.sendData.room = this.saveDataType ? this.saveDataType.data : null
           this.sendData.hall = this.saveDataHall ? this.saveDataHall.data : null
           this.itemSelectType[this.itemSelectTypeActive].type = data
         }
       }
       console.log(this.sendData)
-      this._secondhHand(this.sendData)
+      this._secondhHand()
       this.selectTypeIndexRoom = -1
       this.selectTypeIndexHall = -1
       this.room = null
@@ -325,16 +332,23 @@ export default {
         this.itemSelectType[this.itemSelectTypeActive].type = '区域'
       }
       this.showCitysList = false
+      this._secondhHand()
     },
     // 发送客源消息
-    alertMsg () {
-      this.confirmText = '11'
+    alertMsg (id) {
+      this.projectId = id
       this.$refs.confirmMsg.show()
     },
-    isConfirmMsg () {},
-    confirm () {
-      alert('确定')
+    isConfirmMsg (msg) {
+      const data = {
+        mark: this.sendData.mark,
+        id: this.projectId,
+        msg: msg.msg
+      }
+      console.log(this.projectId)
+      this._addClientResponse(data)
     },
+    confirm () {},
     // 下拉加载
     searchMore () {
       this.hasMore = true
@@ -351,19 +365,36 @@ export default {
         }
       })
     },
-    _secondhHand (data) {
-      secondhHand(data).then(res => {
+    _secondhHand () {
+      this.sendData.start = 0
+      this.projectList = []
+      secondhHand(this.sendData).then(res => {
         if (res.data.draw === 0) {
           this.hasMore = false
-          if (this.data.data.length < 1) {
-            this.noResultWrapper = ''
+          if (res.data.data.length < 1) {
+            this.noResultWrapper = '暂无项目'
+          } else if (res.data.data.length < 11) {
+            this.noResultWrapper = '没有更多了'
           }
           this.projectList = res.data.data
           console.log(this.projectList)
         }
-        setTimeout(() => {
-          this.hasMore = true
-        }, 20)
+      })
+    },
+    _addClientResponse (data) {
+      const self = this
+      addClientResponse(data).then(res => {
+        console.log(res)
+        if (res.data.code === 0) {
+          self.projectList.filter(function (item) {
+            if (item.roomId === self.projectId) {
+              item.contact = 1
+              item.match = 0
+            }
+          })
+          self.confirmText = res.data.msg
+          self.$refs.confirm.show()
+        }
       })
     }
   },
@@ -417,8 +448,13 @@ export default {
           box-sizing: border-box
           padding-left: 10px
         .write
-          font-size: $font-size-large-x
           text-align:left
+          i
+            vertical-align: middle
+            font-size: $font-size-large
+            line-height: 10px
+          span
+            font-size: $font-size-small
         .item-list-show
           width: 100%
           display: flex

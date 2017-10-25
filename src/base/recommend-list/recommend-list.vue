@@ -3,7 +3,7 @@
     <div class="project-list" v-if="projectList.length">
         <ul>
           <li class="item" v-for="item in projectList">
-            <router-link :to="`/detail/${item.roomId}`" tag="div" >
+            <router-link :to="{path:'/detail',query:{id: `${item.roomId}`, match: `${item.match}`, contact: `${item.contact}`, ismy: `${item.ismy}`, mark: `${mark}`, count: `${item.count}`}}" tag="div" >
               <div class="item-top">
                 <p>{{item.city}}</p>
                 <p>{{item.district}}</p>
@@ -14,45 +14,50 @@
                 <p>{{item.username}}</p>
                 <p>{{item.phone}}</p>
                 <p>{{item.type}}</p>
-                <p @click.stop="look" v-if="item.ismy === 0"><i :class="item.contact === 0 ? 'icon-people' : 'icon-people2'"></i></p>
+                <p v-if="item.ismy === 0"><i :class="item.contact === 0 ? 'icon-people' : 'icon-people2'"></i></p>
               </div>
               <div class="item-bottom">
                 <p v-if="item.count">已匹配 <span> {{item.count}} </span>人</p>
                 <p v-else style="color: #dc4900">等待匹配...</p>
                 <p v-if="item.ismy === 0">
-                  <span v-if="item.contact === 0" class="btn bgc" @click.stop="sendMsg">我有客源 <i class="icon-phone"></i></span>
-                  <span v-else-if="item.match === 0" style="color:red">等待对方回复</span>
+                  <span v-if="item.contact === 0" class="btn bgc" @click.stop="sendMsg(item.roomId)">{{mark === 1 ? '我有房源' : '我有客源'}} <i class="icon-phone"></i></span>
+                  <span v-else-if="item.match === 0" style="color:red">等待回复</span>
                   <span v-else-if="item.match === 1" style="color:green">查看回复</span>
                 </p>
                 <p v-else>
-                  <span style="color: red">我的项目</span>
+                  <span style="color: yellowgreen">我的项目</span>
                 </p>
               </div>
             </router-link>
           </li>
         </ul>
       </div>
-      <div v-else style="text-align: center">
-        暂无项目
-      </div>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
+ /* 匹配-0未匹配-1已匹配
+    private Integer match;
+    /**联系-0未联系-1已联系
+    private Integer contcat;
+    /**0-别人的需求-1我的需求
+    private Integer ismy; */
   export default {
     props: {
       projectList: {
         type: Array,
         default: []
+      },
+      mark: {
+        type: Number,
+        default: 1
       }
     },
     methods: {
-      sendMsg () {
-        this.$emit('alertMsg')
+      sendMsg (id) {
+        this.$emit('alertMsg', id)
       },
-      look () {
-        alert('我已联系过')
-      }
+      look () {}
     }
   }
 </script>

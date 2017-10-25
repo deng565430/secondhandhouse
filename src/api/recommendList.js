@@ -5,3 +5,9 @@ export function secondhHand (data) {
 
   return $api.post(url, data)
 }
+
+export function addClientResponse (data) {
+  const url = '/secondhand/addclientresponse'
+
+  return $api.post(url, data)
+}

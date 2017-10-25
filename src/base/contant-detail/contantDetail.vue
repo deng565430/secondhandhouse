@@ -1,36 +1,38 @@
 <template>
   <div class="contant-detail">
-      <ul>
+      <ul v-if="contants.length > 0">
         <li v-for="(item, index) in contants">
           <div class="topheader">
-            <span>{{index + 1}}楼:</span>
-            <span>{{item.time1}}</span>
-            <span></span>
+            <span>{{item.createTime}}</span>
           </div>
           <div  class="content">
             <div class="left">
-              <a>{{item.name}}</a>
-              <a>{{item.phone}}</a>
+              <a>{{isMy === '0' ? '我: ' : item.username}}</a>
+              <a>{{isMy === '0' ? '' : item.phone}}</a>
               <span>{{item.msg}}</span>
             </div>
-            <div class="right" v-if="item.time2">
+            <div class="right" v-if="item.reply">
               <div class="topheader">
-                <span>回复：</span>
-                <span>{{item.time2}}</span>
+                <span>{{item.replyTime}}</span>
                 <span></span>
               </div>
               <div class="contents">
-                <a>{{item.name2}}</a>
-                <span>{{item.huifu}}</span>
+                <a>{{isMy === '1' ? '我: ' : item.replyName}}</a>
+                <a>{{isMy === '1' ? '' : item.replyPhone}}</a>
+                <span>{{item.reply}}</span>
               </div>
             </div>
           </div>
-          <div   class="footer" v-if="!item.time2">
-            <span @click="contactit">联系他</span>
-            <span @click="jujue">拒绝</span>
+          <div class="footer" v-if="isMy === '1'">
+            <div v-if="!item.reply" >
+              <span v-if="item.refuse !== 1" @click="contactHim(item.id)">联系Ta</span>
+              <span v-if="item.refuse !== 1" @click="turnDown(item.id)">拒绝</span>
+              <span v-else class="refuse">已拒绝</span>
+            </div>
           </div>
         </li>
       </ul>
+      <p v-else class="no-msg">暂时还没有消息哦！</p>
   </div>
 </template>
 <script>
@@ -39,14 +41,18 @@
       contants: {
         type: Array,
         default: []
+      },
+      isMy: {
+        type: String,
+        default: []
       }
     },
     methods: {
-      contactit () {
-        this.$emit('contactit')
+      contactHim (id) {
+        this.$emit('contactHim', id)
       },
-      jujue () {
-        this.$emit('jujue')
+      turnDown (id) {
+        this.$emit('turnDown', id)
       }
     }
   }
@@ -67,9 +73,10 @@
       padding: 0 15px
       line-height: 22px
       font-size: 14px
+      overflow: hidden
       a
         text-decoration: underline
-        margin-right: 18px
+        padding-right: 5px
       .right
         text-align: right
         .topheader
@@ -77,8 +84,6 @@
           padding-right: 0
     .footer
       text-align: right
-      height: 40px
-      line-height: 40px
       span
         display:inline-block
         height:18px
@@ -89,4 +94,10 @@
         font-size: 12px
         border-radius: 3px
         margin-right:10px
+      .refuse
+        background: #898989
+  .no-msg
+    text-align: center
+    line-height: 30px
+    background: #f4f1f4
 </style>
