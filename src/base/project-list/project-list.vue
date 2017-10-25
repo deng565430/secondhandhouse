@@ -2,41 +2,29 @@
   <div>
     <div class="project-list">
         <ul>
-          <li class="item">
+          <li class="item" v-for="(i, index) in myprojects">
             <router-link :to="'/detail/1'" tag="div" >
               <div class="item-top">
-                <p>王**</p>
-                <p>发布编号：1355555</p>
-                <p>等待响应</p>
+                <p>发布编号：{{i.roomid||i.sourceid}}</p>
+                <!-- <p class="counts" v-if="i.count> 0"></p> -->
               </div>
               <div class="item-center">
-                <p>曹阳周边</p>
-                <p>500-600万</p>
-                <p>138****8888</p>
-                <p><i class="icon-people"></i></p>
+                <p>{{i.city}}</p>
+                <p>{{i.district}}</p>
+                <p>总价 {{i.total_price}}万</p>
+                <p>{{i.hux}}</p>
               </div>
-              <div class="item-bottom">
-                <div class="btn" @click.stop="backList">恢复</div>
-              </div>
-            </router-link>
-          </li>
-          <li class="item">
-            <router-link :to="'/detail/1'" tag="div" >
-              <div class="item-top">
-                <p>王**</p>
-                <p>发布编号：1355555</p>
-                <p>等待响应</p>
-              </div>
-              <div class="item-center">
-                <p>曹阳周边</p>
-                <p>500-600万</p>
-                <p>138****8888</p>
-                <p><i class="icon-people"></i></p>
-              </div>
-              <div class="item-bottom">
-                <div class="btn" @click.stop="backList">恢复</div>
+              <div class="item-center" v-if="i.phone">
+                <p>{{i.username}}</p>
+                <p>{{i.phone}}</p>
               </div>
             </router-link>
+              <div class="item-bottom" v-if="!i.phone">
+                <p class="counts" v-if="i.count> 0">有<span style="color:red">{{i.count}}</span>人响应</p>
+                <div class="btn" @click.stop="backList(i)" v-if="i.stop_status === 1">恢复</div>
+                <div class="btns"  @click.stop="stoplist(i)" v-if="i.stop_status === 0">停止</div>
+                <!-- <div class="btn" @click.stop="stoplist(i)" >{{i.stop_status==='1' ? '恢复' : '停止'}}</div> -->
+              </div>
           </li>
         </ul>
       </div>
@@ -46,13 +34,20 @@
 <script type="text/ecmascript-6">
   export default {
     props: {
+      myprojects: {
+        type: Array,
+        default: []
+      }
     },
     methods: {
       sendMsg () {
         this.$emit('alertMsg')
       },
-      backList () {
-        this.$emit('blackMsg')
+      backList (i) {
+        this.$emit('blackMsg', i)
+      },
+      stoplist (i) {
+        this.$emit('stoplist', i)
       }
     }
   }
@@ -63,7 +58,7 @@
   @import "~common/stylus/mixin"
   .project-list
     background: #f4f1f4
-    padding: 13px 0
+    padding-bottom: 20px
     .item
       background: #fff
       margin: 0 5px 10px 5px
@@ -76,9 +71,20 @@
         color: #fff
         border-radius: 5px 5px 0 0
         padding: 0 10px
+        position: relative
         p
           line-height: 30px
           font-size: 14px
+        .counts
+          position: absolute
+          top: -3px
+          left: -2px
+          margin-top: 2px
+          line-height: 26px
+          height: 45px
+          width: 50px
+          background: url('./../../common/image/new.png') no-repeat center center
+          background-size: 100% 100%
       .item-center
         height: 40px
         line-height: 40px
@@ -91,7 +97,9 @@
         display: flex
         flex-direction: row-reverse
         padding: 5px 10px
-        .btn
+        position: relative
+        height: 30px
+        .btn, .btns
           font-size: 14px
           height: 20px 
           line-height: 20px
@@ -100,4 +108,15 @@
           color: #fff
           text-align: right
           padding: 3px 12px
+          margin-left: 10px
+        .counts
+          font-size: 13px
+          border-radius: 5px
+          color: #666
+          padding: 2px 8px
+          height: 16px 
+          line-height: 16px
+          position: absolute
+          left: 10px
+          top: 8px
 </style>

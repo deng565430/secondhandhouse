@@ -2,10 +2,7 @@
 <div id="projectlists">
   <div class="titles">
 	 <MyTitle :title="title"></MyTitle>
-	 <!-- <router-link tag="div" :to="{ path: '/search' }"  class="search">
-	       <i class="icon-search"></i>
-	      </router-link> -->
-  </div>
+  </div>	
   <div class="contants">
   	<div class="headertabs">
   	   <select class="selectcss" @change="changeselect" ref="selectes">
@@ -25,24 +22,44 @@
             :class="bdactive === index ? 'active': ''"
             @click="contenttab(index)">{{itme.status}}<span style="color:#e5672c">{{itme.count}}</span></li>
   		</ul>
+  		<Scroll 
+  		:data="myprojects" 
+        :pullup='pullup'
+  		@scrollToEnd="scrollToEnd"
+  		class="list">
   		<div>
-  			<ProjectList></ProjectList>
+  			<ProjectList
+  			:myprojects="myprojects"
+  			@stoplist="stoplist"
+  			@blackMsg="blackMsg">
+  			</ProjectList>
+  			<Loading v-show="isloading"></Loading>
   		</div>
+  		</Scroll>
   	</div>
   </div>
+  <Confirm ref="confirms" 
+  :text="confirmtext"
+  @confirm="confirm"></Confirm>
 </div>
 </template>
 
 <script>
 import MyTitle from 'base/title/title'
+import Scroll from 'base/scroll/scroll'
+import Confirm from 'base/confirm/confirm'
+import Loading from 'base/loading/loading'
 import ProjectList from 'base/project-list/project-list.vue'
-import {getprojectList, getfabuNum} from 'api/myList.js'
+import {getprojectList, getfabuNum, huifuList} from 'api/myList.js'
 export default {
 
   name: 'projectlist',
   components: {
     MyTitle,
-    ProjectList
+    ProjectList,
+    Scroll,
+    Loading,
+    Confirm
   },
   data () {
     return {
@@ -51,32 +68,162 @@ export default {
       contentbat: ['全部', '待响应', '待联系', '已停止'],
       selects: ['发布', '响应'],
       bkindex: 0,
-      bdactive: 0
+      bdactive: 0,
+      myprojects: [],
+      startnum: 0,
+      pullup: true,
+      isloading: true,
+      confirmtext: '确定停止这个项目吗？',
+      id: 0,
+      flag: '',
+      isfabu: 0,
+      isstatus: 0,
+      operate: 1  // 房源0客源1
     }
   },
   created () {
-    this._getfabuNum()
-    getprojectList().then((res) => {
-      console.log(res)
-    })
+    this._getfabuNum(this.isfabu)
+    this._getprojectList(this.startnum, 10, this.isfabu, this.isstatus)
   },
   methods: {
     // 获取 发布的房源
-    _getfabuNum () {
-      getfabuNum().then((res) => {
-        console.log(res.data.data)
-        this.contentbat = res.data.data
+    _getfabuNum (fabu) {
+      getfabuNum(fabu).then((res) => {
+        this.contentbat = res.data.data.room
       })
     },
+    // 获取列表
+    _getprojectList (start, length, fabu, status) {
+      getprojectList(start, length, fabu, status).then((res) => {
+        // this.myprojects = res.data.data
+        if (res.data.code === 0) {
+          this.isloading = false
+          if (this.operate === 1) {
+            res.data.data.room.map((i) => {
+              this.myprojects.push(i)
+            })
+          } else {
+            res.data.data.source.map((i) => {
+              this.myprojects.push(i)
+            })
+          }
+        } else {
+          this.isloading = false
+          this.pullup = false
+        }
+      })
+    },
+    // 滚动列表
+    scrollToEnd () {
+      this.startnum++
+      this._getprojectList(this.startnum, 10, this.isfabu, this.isstatus)
+    },
+    // 房源客源切换
     tabsqh (index) {
       this.bkindex = index
+      this.startnum = 0
+      this.isstatus = 0
+      this.myprojects = []
+      this.bdactive = 0
+      if (index === 0) {
+        this.operate = 1
+        getfabuNum(this.isfabu).then((res) => {
+          this.contentbat = res.data.data.room
+        })
+        this._getprojectList(this.startnum, 10, this.isfabu, this.isstatus)
+      } else {
+        this.operate = 2
+        getfabuNum(this.isfabu).then((res) => {
+          this.contentbat = res.data.data.source
+        })
+        this._getprojectList(this.startnum, 10, this.isfabu, this.isstatus)
+      }
     },
-    // 四个切换
+    // 三个切换
     contenttab (index) {
       this.bdactive = index
+      this.isloading = true
+      this.startnum = 0
+      this.myprojects = []
+      if (index === 0) {
+        this.isstatus = 0
+        this._getprojectList(this.startnum, 10, this.isfabu, this.isstatus)
+      } else if (index === 1) {
+        this.isstatus = 1
+        this._getprojectList(this.startnum, 10, this.isfabu, this.isstatus)
+        // this._getxiangyingList(this.startnum, 10, this.isfabu, this.isstatus)
+      } else if (index === 2) {
+        this.isstatus = 2
+        this._getprojectList(this.startnum, 10, this.isfabu, this.isstatus)
+        // this._getstopList(this.startnum, 10, this.isfabu, this.isstatus)
+      }
     },
+    // 发布个响应切换
     changeselect () {
       console.log(this.$refs.selectes.value)
+      this.isstatus = 0
+      this.isloading = true
+      this.startnum = 0
+      this.myprojects = []
+      this.bdactive = 0
+      this.bkindex = 0
+      this.operate = 1
+      this.isfabu = 0
+      if (this.$refs.selectes.value === '发布') {
+        this.isfabu = 0
+      } else {
+        this.isfabu = 1
+      }
+      this._getfabuNum(this.isfabu)
+      this._getprojectList(this.startnum, 10, this.isfabu, this.isstatus)
+    },
+    // 停止这个项目
+    stoplist (i) {
+      console.log(i)
+      this.confirmtext = '确定停止这个项目吗？'
+      this.$refs.confirms.show()
+      if (i.roomid !== null) {
+        this.id = i.roomid
+      } else {
+        this.id = i.sourceid
+      }
+      this.flag = 0
+    },
+    // 恢复这个项目
+    blackMsg (i) {
+      console.log(i)
+      this.confirmtext = '确定恢复这个项目吗？'
+      this.$refs.confirms.show()
+      if (i.roomid !== null) {
+        this.id = i.roomid
+      } else {
+        this.id = i.sourceid
+      }
+      this.flag = 1
+    },
+    // 确定
+    confirm () {
+      huifuList(this.id, this.flag, this.operate).then((res) => {
+        this.myprojects.map((item) => {
+          if (item.roomid !== null) {
+            if (item.roomid === this.id) {
+              if (item.stop_status === 1) {
+                item.stop_status = 0
+              } else {
+                item.stop_status = 1
+              }
+            }
+          } else {
+            if (item.sourceid === this.id) {
+              if (item.stop_status === 1) {
+                item.stop_status = 0
+              } else {
+                item.stop_status = 1
+              }
+            }
+          }
+        })
+      })
     }
   }
 }
@@ -84,77 +231,97 @@ export default {
 
 <style scoped lang="stylus" rel="stylesheet/stylus">
 @import "~common/stylus/variable"
-#projectlists
+body, html
+  height: 100%
+  width: 100%
   background: #f4f1f4
-  .titles
-    position:fixed
-    top: 0
-    left: 0
-    width:100%
-    z-index: 11111
-    .search
-      position: absolute
-      top: 6px
-      right: 10px
-      font-size: 20px
-      color: #fff
-      padding: 10px
-  .contants
-     margin-top: 50px
-     .headertabs
-       position: relative
-       height: 40px
-       line-height: 40px
-       background: linear-gradient(left, #ee6354, #f87529)
-       display: flex
-       justify-content: center
-       .selectcss
-         position: absolute
-         left: 10px
-         top: 3px
-         padding: 0 3px 0 3px
-         border: solid 1px #fff
-         border-radius: 3px
-         height: 26px
-         line-height: 26px
-         background: none
-         color: #fff
-       .tabbtn
-         height: 30px
+  #projectlists
+    background: #f4f1f4
+    .titles
+      position:fixed
+      top: 0
+      left: 0
+      width:100%
+      z-index: 111
+      .search
+        position: absolute
+        top: 6px
+        right: 10px
+        font-size: 20px
+        color: #fff
+        padding: 10px
+    .contants
+       margin-top: 50px
+       .headertabs
+         position: fixed
+         height: 40px
+         line-height: 40px
+         background: linear-gradient(left, #ee6354, #f87529)
          display: flex
-         text-align: center
-         line-height: 30px
-         color: #fff
-         font-size: 16px
-         border: 1px solid #fff
-         border-radius: 5px
-         li
-           width: 50%
-           padding: 0 30px
-         li:nth-child(1)
-           border-right: 1px solid #fff
-         .active
-            background: #fff
-            color: #e5672c
-     .contanttab
-       height: 40px
-       line-height: 40px
-       background: #fff
-       .ctwrap
-         display: flex
-         font-size: 16px
-         text-align: center
-         color: #666
-         text-align:justify
-         li
-           width: 25%
+         justify-content: center
+         width: 100%
+         top: 50px
+         left: 0
+         z-index: 111
+         .selectcss
+           position: absolute
+           left: 10px
+           top: 3px
+           padding: 0 3px 0 3px
+           border: solid 1px #fff
+           border-radius: 3px
+           height: 26px
+           line-height: 26px
+           background: none
+           color: #fff
+         .tabbtn
+           height: 30px
+           display: flex
            text-align: center
-           border-right: 1px solid #d2d2d2
-           border-bottom: 1px solid #d2d2d2
-           color: #a2a2a2
-         li:last-child
-           border-right: 0 
-         .active
-           border-bottom: 2px solid #ff5500
-           color: #000
+           line-height: 30px
+           color: #fff
+           font-size: 16px
+           border: 1px solid #fff
+           border-radius: 5px
+           li
+             width: 50%
+             padding: 0 30px
+           li:nth-child(1)
+             border-right: 1px solid #fff
+           .active
+              background: #fff
+              color: #e5672c
+       .contanttab
+         height: 40px
+         line-height: 40px
+         .ctwrap
+           display: flex
+           font-size: 16px
+           text-align: center
+           color: #666
+           text-align:justify
+           justify-content: space-around
+           position:fixed
+           top: 90px
+           left: 0
+           width: 100%
+           z-index: 111
+           background: #fff
+           li
+             width: 100%
+             text-align: center
+             border-right: 1px solid #d2d2d2
+             border-bottom: 1px solid #d2d2d2
+             color: #a2a2a2
+           li:last-child
+             border-right: 0 
+           .active
+             border-bottom: 2px solid #ff5500
+             color: #000
+         .list
+           position: fixed
+           top: -3px
+           bottom: 120px
+           width: 100%
+           padding-top: 135px
 </style>
