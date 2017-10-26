@@ -410,7 +410,8 @@ export default {
           room: this.room,
           hall: this.hall,
           greenRate: this.greenRate === -1 ? null : this.greenRate,
-          remark: this.remark
+          remark: this.remark,
+          area: this.area
         }
         secondHandRoom(data).then(res => {
           console.log(res)
@@ -457,7 +458,8 @@ export default {
           census: this.census,
           social: this.social === -1 ? null : this.social,
           downPayment: this.downPayment === -1 ? null : this.downPayment,
-          clientCount: this.clientCount
+          clientCount: this.clientCount,
+          area: this.area
         }
         secondHandSource(data).then(res => {
           console.log(res)
