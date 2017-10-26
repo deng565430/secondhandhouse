@@ -322,11 +322,11 @@ export default {
       this.sendData.prov = data.provinceActive
       this.sendData.city = data.cityActive
       this.sendData.district = data.districtlistActive
-      if (data.districtlistActive !== '' && data.districtlistActive !== '全部') {
+      if (data.districtlistActive !== '' && data.districtlistActive !== null) {
         this.itemSelectType[this.itemSelectTypeActive].type = data.districtlistActive
-      } else if (data.cityActive !== '' && data.cityActive !== '全部') {
+      } else if (data.cityActive !== '' && data.cityActive !== null) {
         this.itemSelectType[this.itemSelectTypeActive].type = data.cityActive
-      } else if (data.provinceActive !== '' && data.provinceActive !== '全部') {
+      } else if (data.provinceActive !== '' && data.provinceActive !== null) {
         this.itemSelectType[this.itemSelectTypeActive].type = data.provinceActive
       } else {
         this.itemSelectType[this.itemSelectTypeActive].type = '区域'

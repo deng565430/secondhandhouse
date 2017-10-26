@@ -3,6 +3,7 @@
       <ul v-if="contants.length > 0">
         <li v-for="(item, index) in contants">
           <div class="topheader">
+            <a>{{index + 1}}楼</a>
             <span>{{item.createTime}}</span>
           </div>
           <div  class="content">

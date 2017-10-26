@@ -7,7 +7,7 @@
 	    </router-link>
 	</div>
 
-	<Scroll ref="scroll" class="list">
+	<Scroll ref="scroll" class="list" :data="contantsNews">
 	<div class="xqcontent">
 		<div class="publishPeople">
 			<div class="title">
@@ -94,7 +94,7 @@
 	</Scroll>
 	<div class="contantfooter">
 		<p v-if="ismy === '1'" >
-      <span v-if="projectDetailsList.isstop !== 1" @click="stopProject"v-show="stopbtns">停止此项目</span>
+      <span v-if="projectDetailsList.isstop === 0" @click="stopProject"v-show="stopbtns">停止此项目</span>
       <span v-else style="background:#ccc">此项目已停止</span>
     </p>
 		<p v-if="ismy === '0'" ><span v-if="contantsNews.length < 1" @click="keyuan"v-show="keyuanisshow">我有客源<i class="icon-phone"></i></span></p>
@@ -219,7 +219,7 @@ export default {
         updateClientSourceStatus(data).then(res => {
           console.log(res)
           if (res.data.code === 0) {
-            this.projectDetailsList.isstop = 0
+            this.projectDetailsList.isstop = 1
           }
         })
       } else if (this.confirmText === '确定拒绝联系此人?') {
@@ -262,7 +262,6 @@ export default {
       const data = {
         id: this.id,
         match: this.match,
-        contact: this.contact,
         mark: this.mark,
         ismy: this.ismy
       }

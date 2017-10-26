@@ -64,9 +64,9 @@ export default {
         name: '全部',
         provinceType: 'all'
       }],
-      province: '',
-      district: '',
-      city: '',
+      province: null,
+      district: null,
+      city: null,
       childCitylist: [],
       districtList: [],
       provinceActive: '',
@@ -94,17 +94,19 @@ export default {
       if (item.name === '全部') {
         this.childCitylistHasMore = false
         this.childCitylistHasMoreTxt = ''
+        this.province = null
+      } else {
+        this.province = item.provinceType
       }
       this.districtListHasMore = false
       this.districtListHasMoreTxt = ''
       this.provinceActive = item.name
-      this.province = item.provinceType
       this.childCitylist = []
       this.districtList = []
       this.cityActive = ''
       this.districtlistActive = ''
-      this.district = 'all'
-      this.city = 'all'
+      this.district = null
+      this.city = null
       this._getCitylist()
     },
     selectCity (item, index) {
@@ -114,22 +116,23 @@ export default {
       if (item === '全部') {
         this.districtListHasMore = false
         this.districtListHasMoreTxt = ''
+        this.city = null
+      } else {
+        this.city = item
       }
+      console.log(this.city)
       this.cityActive = item
-      this.city = item === '全部' ? 'all' : item
       this.districtList = []
-      this.district = 'all'
+      this.district = null
       this.districtlistActive = ''
       this._getdistrictlist()
     },
     selectdistrictlist (item, index) {
       this.districtlistActive = item
-      this.district = item === '全部' ? 'all' : item
+      console.log(item)
+      this.district = item === '全部' ? null : item
     },
     selectProvinceList () {
-      console.log(this.provinceActive)
-      console.log(this.cityActive)
-      console.log(this.districtlistActive)
       this.districtListHasMore = false
       this.childCitylistHasMore = false
       this.districtListHasMoreTxt = ''
@@ -139,7 +142,7 @@ export default {
       this.projectName = 'all'
       this.showCitysList = false
       this.projectMsg = false
-      this.$emit('showCitysListEvent', {provinceActive: this.provinceActive, cityActive: this.cityActive, districtlistActive: this.districtlistActive})
+      this.$emit('showCitysListEvent', {provinceActive: this.province, cityActive: this.city, districtlistActive: this.district})
     },
     _getProvincelist() {
       if (this.provincelist.length > 1) {

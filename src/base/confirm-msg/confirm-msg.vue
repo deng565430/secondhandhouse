@@ -14,7 +14,7 @@
             <p ref="isSuccess">{{success}}</p>
           </div>
           <div class="textarea">
-            <textarea placeholder="请输入留言内容" @input="textChange" v-model="msg">{{sendMsg}}</textarea>
+            <textarea placeholder="请输入留言内容" v-model="msg">{{sendMsg}}</textarea>
           </div>
           <div class="operate">
             <div @click="cancel" class="operate-btn left">{{cancelBtnText}}</div>
@@ -71,7 +71,6 @@
       cancel() {
         this.hide()
         this.$emit('cancelMsg')
-        this.success = ''
       },
       textChange () {
         if (this._trim(this.msg) === '') {
@@ -83,17 +82,12 @@
         }
       },
       confirm() {
-        if (this._trim(this.msg) === '') {
-          this.success = '请输入内容!'
-          return
-        }
         this.hide()
         const data = {
           msg: this.msg,
           flag: this.msgFlag
         }
         this.$emit('confirmMsg', data)
-        this.success = ''
       },
       _trim(str) {
         return str.replace(/(^\s+)|(\s+$)/g, '')
