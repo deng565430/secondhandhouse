@@ -53,6 +53,7 @@ export default [
   }, {
     path: '/projectlist',
     name: 'projectlist',
-    component: MyProjectList
+    component: MyProjectList,
+    meta: { keepAlive: true }
   }
 ]

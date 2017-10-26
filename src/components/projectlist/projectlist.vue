@@ -5,9 +5,11 @@
   </div>	
   <div class="contants">
   	<div class="headertabs">
+    <!-- 发布响应切换 -->
   	   <select class="selectcss" @change="changeselect" ref="selectes">
 	    	<option v-for="(itme, index) in selects">{{itme}}</option>
 	    </select>
+      <!-- 房源客源切换 -->
   		<ul class="tabbtn">
           <li 
           v-for="(itme, index) in tabs" 
@@ -16,6 +18,7 @@
         </ul>
   	</div>
   	<div class="contanttab">
+    <!-- 三种状态切换 -->
   		<ul class="ctwrap">
   			<li 
   			v-for="(itme, index) in contentbat" 
@@ -30,6 +33,8 @@
   		<div>
   			<ProjectList
   			:myprojects="myprojects"
+        :mark="mark"
+        :zanwu="zanwu"
   			@stoplist="stoplist"
   			@blackMsg="blackMsg">
   			</ProjectList>
@@ -78,7 +83,12 @@ export default {
       flag: '',
       isfabu: 0,
       isstatus: 0,
-      operate: 1  // 房源0客源1
+      operate: 1,  // 房源1客源2
+      match: null,
+      contact: null,
+      ismy: 1,
+      mark: 1,
+      zanwu: false
     }
   },
   created () {
@@ -89,7 +99,11 @@ export default {
     // 获取 发布的房源
     _getfabuNum (fabu) {
       getfabuNum(fabu).then((res) => {
-        this.contentbat = res.data.data.room
+        if (this.operate === 1) {
+          this.contentbat = res.data.data.room
+        } else {
+          this.contentbat = res.data.data.source
+        }
       })
     },
     // 获取列表
@@ -99,12 +113,26 @@ export default {
         if (res.data.code === 0) {
           this.isloading = false
           if (this.operate === 1) {
+            if (res.data.data.room.length < 1) {
+              this.zanwu = true
+            } else {
+              this.zanwu = false
+            }
             res.data.data.room.map((i) => {
               this.myprojects.push(i)
+              i.contact = this.contact
+              i.ismy = this.ismy
             })
           } else {
+            if (res.data.data.source.length < 1) {
+              this.zanwu = true
+            } else {
+              this.zanwu = false
+            }
             res.data.data.source.map((i) => {
               this.myprojects.push(i)
+              i.contact = this.contact
+              i.ismy = this.ismy
             })
           }
         } else {
@@ -127,12 +155,14 @@ export default {
       this.bdactive = 0
       if (index === 0) {
         this.operate = 1
+        this.mark = 1
         getfabuNum(this.isfabu).then((res) => {
           this.contentbat = res.data.data.room
         })
         this._getprojectList(this.startnum, 10, this.isfabu, this.isstatus)
       } else {
         this.operate = 2
+        this.mark = 2
         getfabuNum(this.isfabu).then((res) => {
           this.contentbat = res.data.data.source
         })
@@ -166,13 +196,15 @@ export default {
       this.startnum = 0
       this.myprojects = []
       this.bdactive = 0
-      this.bkindex = 0
-      this.operate = 1
+      // this.bkindex = 0
+      // this.operate = 1
       this.isfabu = 0
       if (this.$refs.selectes.value === '发布') {
         this.isfabu = 0
+        this.ismy = 1
       } else {
         this.isfabu = 1
+        this.ismy = 0
       }
       this._getfabuNum(this.isfabu)
       this._getprojectList(this.startnum, 10, this.isfabu, this.isstatus)
@@ -323,5 +355,5 @@ body, html
            top: -3px
            bottom: 120px
            width: 100%
-           padding-top: 135px
+           padding-top: 148px
 </style>
