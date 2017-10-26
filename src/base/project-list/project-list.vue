@@ -11,8 +11,8 @@
               <div class="item-center">
                 <p>{{i.city}}</p>
                 <p>{{i.district}}</p>
-                <p>总价 {{i.total_price}}万</p>
                 <p>{{i.hux}}</p>
+                <p>总价 {{i.total_price}}万</p>
               </div>
               <div class="item-center" v-if="i.phone">
                 <p>{{i.username}}</p>
