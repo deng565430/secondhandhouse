@@ -235,6 +235,7 @@ export default {
     // 确定
     confirm () {
       huifuList(this.id, this.flag, this.operate).then((res) => {
+        this._getfabuNum(this.isfabu)
         this.myprojects.map((item) => {
           if (item.roomid !== null) {
             if (item.roomid === this.id) {
