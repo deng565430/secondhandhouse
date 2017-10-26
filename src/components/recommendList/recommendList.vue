@@ -3,12 +3,12 @@
   <div class="title">
     <my-title :title="'二手房市场'"></my-title>
     <router-link tag="div" :to="{ path: '/projectlist' }" class="my-list">
-      <p>我的列表</p>
+      <p>我的 <i class="icon-people2"></i></p>
     </router-link>
     <div>
       <div class="top-select">
         <router-link tag="div" :to="{ path: '/addproject' }" class="write">
-          <p><i class="icon-write"></i><span>发布</span></p>
+          <p><i class="icon-write"></i></p>
         </router-link>
         <ul class="item-list-show xiangying-top">
           <li v-for="(item, index) in houseList" :key="index" :class="houseListActive === index ? 'active' : ''" @click="houseListEvent(item, index)">{{item}}</li>
@@ -435,8 +435,12 @@ export default {
         position: absolute
         right: 10px
         top: 10px
-        font-size: $font-size-medium
+        font-size: $font-size-medium-x
         padding: 10px
+        p
+          i
+            vertical-align: top
+            font-size: $font-size-medium
       .top-select
         display: flex
         .write, .search
@@ -450,9 +454,8 @@ export default {
         .write
           text-align:left
           i
-            vertical-align: middle
-            font-size: $font-size-large
-            line-height: 10px
+            vertical-align: top
+            font-size: 32px
           span
             font-size: $font-size-small
         .item-list-show

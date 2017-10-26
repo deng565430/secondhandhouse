@@ -3,7 +3,7 @@
     <div class="project-list" v-if="projectList.length">
         <ul>
           <li class="item" v-for="item in projectList">
-            <router-link :to="{path:'/detail',query:{id: `${item.roomId}`, match: `${item.match}`, contact: `${item.contact}`, ismy: `${item.ismy}`, mark: `${mark}`, count: `${item.count}`}}" tag="div" >
+            <router-link :to="{path:'/detail',query:{id: `${item.roomId}`, match: `${item.match}`, contact: `${item.contact}`, ismy: `${item.ismy}`, mark: `${mark}`, count: `${item.count == null ? 0 : item.count}`}}" tag="div" >
               <div class="item-top">
                 <p>{{item.city}}</p>
                 <p>{{item.district}}</p>
@@ -18,9 +18,9 @@
               </div>
               <div class="item-bottom">
                 <p v-if="item.count">已匹配 <span> {{item.count}} </span>人</p>
-                <p v-else style="color: #dc4900">等待匹配...</p>
+                <p v-else style="color: #dc4900">等待响应...</p>
                 <p v-if="item.ismy === 0">
-                  <span v-if="item.contact === 0" class="btn bgc" @click.stop="sendMsg(item.roomId)">{{mark === 1 ? '我有房源' : '我有客源'}} <i class="icon-phone"></i></span>
+                  <span v-if="item.contact === 0" class="btn bgc" @click.stop="sendMsg(item.roomId)">{{mark === 1 ? '我有客源' : '我有房源'}} <i class="icon-phone"></i></span>
                   <span v-else-if="item.match === 0" style="color:red">等待回复</span>
                   <span v-else-if="item.match === 1" style="color:green">查看回复</span>
                 </p>
@@ -72,11 +72,10 @@
       padding: 10px
       .item-top, .item-center
         display: flex
-        justify-content: space-around
         p
+          width: 25%
           line-height: 3
           text-align: center
-          font-size: $font-size-small
           no-wrap()
           i
             color: #e5672c
@@ -84,8 +83,8 @@
         p
           font-size: $font-size-medium
       .item-center
-        p:nth-child(2)
-          width: 30%
+        p
+          font-size: $font-size-small
       .item-bottom
         display: flex
         p:first-child

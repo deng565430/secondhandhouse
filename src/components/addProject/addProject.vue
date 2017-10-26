@@ -3,7 +3,7 @@
   <div class="title">
     <my-title :title="'发布需求'"></my-title>
     <router-link tag="div" :to="{ path: '/projectlist' }" class="my-list">
-      <p>我的列表</p>
+      <p>我的 <i class="icon-people2"></i></p>
     </router-link>
     <div class="top-select">
       <ul class="item-list-show xiangying-top">
@@ -247,7 +247,7 @@
           </div>
         </div>
         <div class="user-send" v-if="!isDisable">
-          <button type="button" class="btn send" :class="disabled === true ? 'btn' : 'disabled'" @click.stop.prevent="send">提交</button>
+          <button v-if="isSend" type="button" class="btn send" :class="disabled === true ? 'btn' : 'disabled'" @click.stop.prevent="send">提交</button>
         </div>
       </div>
     </scroll>
@@ -269,6 +269,7 @@ export default {
     return {
       confirmText: '请填写完整',
       isDisable: false,
+      isSend: true,
       houseList: ['房源', '客源'],
       houseListActive: 0,
       disabled: true,
@@ -391,6 +392,7 @@ export default {
           this.$refs.confirm.show()
           return
         }
+        this.isSend = false
         const data = {
           name: this.name,
           price: this.price,
@@ -418,6 +420,9 @@ export default {
           if (res.data.code === 0) {
             this.confirmText = '提交成功'
             this.$refs.confirm.show()
+            setTimeout(() => {
+              this.isSend = true
+            }, 30)
           }
         })
       } else {
@@ -436,6 +441,7 @@ export default {
           this.$refs.confirm.show()
           return
         }
+        this.isSend = false
         const data = {
           name: this.name,
           price: this.price,
@@ -466,9 +472,9 @@ export default {
           if (res.data.code === 0) {
             this.confirmText = '提交成功'
             this.$refs.confirm.show()
-          } else {
-            this.confirmText = '提交成功'
-            this.$refs.confirm.show()
+            setTimeout(() => {
+              this.isSend = true
+            }, 30)
           }
         })
       }
@@ -548,6 +554,11 @@ export default {
         top: 10px
         font-size: $font-size-medium
         padding: 10px
+        p
+          font-size: $font-size-medium-x
+          i
+            vertical-align: top
+            font-size: $font-size-medium
       .top-select
         display: flex
         .item-list-show

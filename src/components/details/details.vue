@@ -3,7 +3,7 @@
 	<div class="xqTitle">
   		<MyTitle :title="title"></MyTitle>
   		<router-link tag="div" :to="{ path: '/projectlist' }" class="my-list">
-	      	<p>我的列表</p>
+	      	<p>我的 <i class="icon-people2"></i></p>
 	    </router-link>
 	</div>
 
@@ -12,7 +12,7 @@
 		<div class="publishPeople">
 			<div class="title">
 				<p>发布人</p>
-				<p>已响应<span>{{count}}</span>人</p>
+				<p>已响应<span>{{count == 'null' ? 0 : count}}</span>人</p>
 			</div>
 			<div class="content">
 				<div>用户: <span class="name">{{projectDetailsList.username}}</span></div>
@@ -25,7 +25,7 @@
 		</div>
 		<div class="xuqiuxq">
 			<div class="title">
-				<p>项目编号: <span class="colors">{{projectDetailsList.roomid}}</span></p>
+				<p>编号: <span class="colors">{{projectDetailsList.roomid || projectDetailsList.sourceid}}</span></p>
 			</div>
       <div class="xq">
 			   <div class="itme">
@@ -128,7 +128,7 @@ export default {
   data () {
     return {
       projectDetailsList: {},
-      title: '项目详情',
+      title: this.$route.query.mark === '2' ? '客源详情' : '房源详情',
       hintMsg: '回复消息之后双方都可以看到联系方式！',
       isStopThisProject: true,
       iszhankai: false,
@@ -331,6 +331,12 @@ export default {
       font-size: 14px
       color: #fff
       padding: 10px
+      font-size: $font-size-medium
+      p
+        font-size: $font-size-medium-x
+        i
+          vertical-align: top
+          font-size: $font-size-medium
   .list
     position: fixed
     top: 0
