@@ -9,23 +9,23 @@
           <div  class="content">
             <div class="left">
               <a>{{isMy === '0' ? '我: ' : item.username}}</a>
-              <a>{{isMy === '0' ? '' : item.phone}}</a>
+              <a @click="telPhone(item.phone)">{{isMy === '0' ? '' : item.phone}}</a>
               <span>{{item.msg}}</span>
             </div>
-            <div class="right" v-if="item.reply">
+            <div class="right" v-if="item.reply != null">
               <div class="topheader">
                 <span>{{item.replyTime}}</span>
                 <span></span>
               </div>
               <div class="contents">
                 <a>{{isMy === '1' ? '我: ' : item.replyName}}</a>
-                <a>{{isMy === '1' ? '' : item.replyPhone}}</a>
+                <a @click="telPhone(item.replyPhone)">{{isMy === '1' ? '' : item.replyPhone}}</a>
                 <span>{{item.reply}}</span>
               </div>
             </div>
           </div>
           <div class="footer" v-if="isMy === '1'">
-            <div v-if="!item.reply" >
+            <div v-if="item.reply == null" >
               <span v-if="item.refuse !== 1" @click="contactHim(item.id)">联系Ta</span>
               <span v-if="item.refuse !== 1" @click="turnDown(item.id)">拒绝</span>
               <span v-else class="refuse">已拒绝</span>
@@ -54,6 +54,11 @@
       },
       turnDown (id) {
         this.$emit('turnDown', id)
+      },
+      telPhone (num) {
+        if (num.indexOf('*') < 0) {
+          window.location.href = `tel:${num}`
+        }
       }
     }
   }

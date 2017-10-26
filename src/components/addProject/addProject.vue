@@ -666,6 +666,8 @@ export default {
               border-radius: 4px
               border: 1px solid #ccc
               color: #666
+          h6
+            font-size: $font-size-medium
       .user-send
         padding: 15px
         text-align: right
@@ -679,6 +681,7 @@ export default {
           height: 35px
           border-radius: 4px
           color: #fff
+          font-size: $font-size-medium-x
         .send
           background: #e5672c
         .default

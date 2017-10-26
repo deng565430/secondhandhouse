@@ -35,7 +35,7 @@
 			   </div>
             <div class="itme">
               <div><span>面积: </span><span class="colors">{{projectDetailsList.area}}</span></div>
-              <div><span>总价: </span><span class="colors">{{projectDetailsList.totalPrice}}</span></div>
+              <div><span>总价: </span><span class="colors">{{projectDetailsList.totalPrice ? projectDetailsList.totalPrice + '万元' : ''}}</span></div>
               <div><span>房龄: </span><span class="colors">{{projectDetailsList.roomAge}}</span></div>
             </div>
          <div class="itme">

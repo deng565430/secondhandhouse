@@ -31,12 +31,10 @@ const MyProjectList = (resolve) => {
 export default [
   {
     path: '/',
-    component: RecommendList,
-    meta: { keepAlive: true }
+    component: RecommendList
   }, {
     path: '/recommend',
     component: RecommendList,
-    meta: { keepAlive: true },
     name: 'recommendList'
   }, {
     path: '/addproject',
