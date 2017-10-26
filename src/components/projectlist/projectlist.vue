@@ -84,7 +84,6 @@ export default {
       isfabu: 0,
       isstatus: 0,
       operate: 1,  // 房源1客源2
-      match: null,
       contact: null,
       ismy: 1,
       mark: 1,
@@ -306,13 +305,14 @@ body, html
            line-height: 26px
            background: none
            color: #fff
+           font-size: 12px
          .tabbtn
            height: 30px
            display: flex
            text-align: center
            line-height: 30px
            color: #fff
-           font-size: 16px
+           font-size: 14px
            border: 1px solid #fff
            border-radius: 5px
            li
@@ -328,7 +328,7 @@ body, html
          line-height: 40px
          .ctwrap
            display: flex
-           font-size: 16px
+           font-size: 14px
            text-align: center
            color: #666
            text-align:justify
