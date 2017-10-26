@@ -3,7 +3,7 @@
     <div class="project-list">
         <ul>
           <li class="item" v-for="(i, index) in myprojects" v-if="i.roomid || i.sourceid">
-            <router-link :to="{path:'/detail',query:{id: `${i.roomid||i.sourceid}`, match: `${i.match}`,  ismy: `${i.ismy}`, mark: `${mark}`, count: `${i.count}`}}" tag="div" >
+            <router-link :to="{path:'/detail',query:{id: `${i.roomid||i.sourceid}`, match: `${i.match}`,  ismy: `${i.ismy}`, mark: `${mark}`, count: `${i.count || 0}`}}" tag="div" >
               <div class="item-top">
                 <p>发布编号：{{i.roomid||i.sourceid}}</p>
                 <!-- <p class="counts" v-if="i.count> 0"></p> -->
