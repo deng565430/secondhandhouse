@@ -12,7 +12,7 @@
 		<div class="publishPeople">
 			<div class="title">
 				<p>发布人</p>
-				<p>已响应<span>{{count == 'null' ? 0 : count}}</span>人</p>
+				<p>已匹配<span>{{count == 'null' ? 0 : count}}</span>人</p>
 			</div>
 			<div class="content">
 				<div>用户: <span class="name">{{projectDetailsList.username}}</span></div>
@@ -100,7 +100,7 @@
   </div>
   </Scroll>
   <div  v-if="ismy === '0'" class="add-contantfooter">
-    <p><span v-if="contantsNews.length < 1" @click="keyuan"v-show="keyuanisshow">我有客源<i class="icon-phone"></i></span></p>
+    <p><span v-if="contantsNews.length < 1" @click="keyuan"v-show="keyuanisshow">我有{{mark === '1' ? '客源' : '房源'}}<i class="icon-phone"></i></span></p>
   </div>
 	<div>
 		<confirm-msg :hintMsg="hintMsg" ref="confirmMsg" :msgFlag="msgFlag" :text="confirmMsgText" @confirmMsg="isConfirmMsg" :sendMsg="confirmMsgSendMsg"></confirm-msg>

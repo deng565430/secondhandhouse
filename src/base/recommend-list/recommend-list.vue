@@ -12,7 +12,7 @@
               </div>
               <div class="item-center">
                 <p>{{item.username}}</p>
-                <p @click.stop="telPhone(item.phone)">{{item.phone}}</p>
+                <p>{{item.phone}}</p>
                 <p>{{item.type}}</p>
                 <p class="is-contact" v-if="item.ismy === 0"><img v-if="item.contact !== 0" :src="secondhousegou" alt=""> 已联系</p>
               </div>
@@ -62,11 +62,6 @@
     methods: {
       sendMsg (id) {
         this.$emit('alertMsg', id)
-      },
-      telPhone (num) {
-        if (num.indexOf('*') < 0) {
-          window.location.href = `tel:${num}`
-        }
       }
     }
   }
