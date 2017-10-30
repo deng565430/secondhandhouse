@@ -8,7 +8,7 @@
           </div>
           <div  class="content">
             <div class="left">
-              <a>{{isMy === '0' ? '我: ' : item.username}}</a>
+              <a :class="isMy === '0' ? 'colors' : ''">{{isMy === '0' ? '我: ' : item.username}}</a>
               <a @click="telPhone(item.phone)">{{isMy === '0' ? '' : item.phone}}</a>
               <span>{{item.msg}}</span>
             </div>
@@ -18,7 +18,7 @@
                 <span></span>
               </div>
               <div class="contents">
-                <a>{{isMy === '1' ? '我: ' : item.replyName}}</a>
+                <a :class="isMy === '1' ? 'colors' : ''">{{isMy === '1' ? '我: ' : item.replyName}}</a>
                 <a @click="telPhone(item.replyPhone)">{{isMy === '1' ? '' : item.replyPhone}}</a>
                 <span>{{item.reply}}</span>
               </div>
@@ -30,6 +30,9 @@
               <span v-if="item.refuse !== 1" @click="turnDown(item.id)">拒绝</span>
               <span v-else class="refuse">已拒绝</span>
             </div>
+          </div>
+          <div class="footer" v-else>
+            <span v-if="item.refuse === 1"  class="refuse">已被拒绝</span>
           </div>
         </li>
       </ul>
@@ -83,6 +86,9 @@
       a
         text-decoration: underline
         padding-right: 5px
+      .colors
+        color: #f7732e
+        text-decoration:none
       .right
         text-align: right
         .topheader

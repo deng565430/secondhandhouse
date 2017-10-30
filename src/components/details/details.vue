@@ -16,10 +16,10 @@
 			</div>
 			<div class="content">
 				<div>用户: <span class="name">{{projectDetailsList.username}}</span></div>
-				<div>手机号:<span class="phone">{{projectDetailsList.phone}}</span></div>
+				<div @click="telPhone(projectDetailsList.phone)">手机号:<span class="phone">{{projectDetailsList.phone}}</span></div>
 				<div v-if="ismy === '0'" class="hezuo"><span>{{match === '0' ? '未合作过 ' : '已合作过 '}} <i :class="match === '0' ? 'icon-people' : 'icon-people2'" v-if="ismy === '0'"></i></span></div>
 			</div>
-			<div class="footer" v-if="ismy === '0'"  @click="backList">
+			<div style="display: none;" class="footer" v-if="ismy === '0'"  @click="backList">
 				<span class="defriend">拉黑<i class="icon-blacklist"></i></span>
 			</div>
 		</div>
@@ -35,7 +35,7 @@
 			   </div>
             <div class="itme">
               <div><span>面积: </span><span class="colors">{{projectDetailsList.area}}</span></div>
-              <div><span>总价: </span><span class="colors">{{projectDetailsList.totalPrice ? projectDetailsList.totalPrice + '万元' : ''}}</span></div>
+              <div><span>总价: </span><span class="colors">{{projectDetailsList.totalPrice ? projectDetailsList.totalPrice + '万' : ''}}</span></div>
               <div><span>房龄: </span><span class="colors">{{projectDetailsList.roomAge}}</span></div>
             </div>
          <div class="itme">
@@ -78,7 +78,7 @@
 		</div>
 		<div class="lxdetails">
 			<div class="title">
-				<p>联系详情</p>
+        <p>联系详情<span>{{contantsNewsNum === '-1' ? '' : contantsNewsNum + '条消息未处理'}}</span></p>
 			</div>
 			<div>
 				<Cdetail
@@ -90,15 +90,18 @@
 				<!-- <Xqdetail></Xqdetail> -->
 			</div>
 		</div>
-	</div>
-	</Scroll>
-	<div class="contantfooter">
-		<p v-if="ismy === '1'" >
-      <span v-if="projectDetailsList.isstop === 0" @click="stopProject"v-show="stopbtns">停止此项目</span>
-      <span v-else style="background:#ccc">此项目已停止</span>
-    </p>
-		<p v-if="ismy === '0'" ><span v-if="contantsNews.length < 1" @click="keyuan"v-show="keyuanisshow">我有客源<i class="icon-phone"></i></span></p>
-	</div>
+  	<div class="contantfooter">
+  		<p v-if="ismy === '1'" >
+        <span v-if="projectDetailsList.isstop === 0" @click="stopProject"v-show="stopbtns">停止此项目</span>
+        <span v-else style="background:#ccc">此项目已停止</span>
+      </p>
+
+  	</div>
+  </div>
+  </Scroll>
+  <div  v-if="ismy === '0'" class="add-contantfooter">
+    <p><span v-if="contantsNews.length < 1" @click="keyuan"v-show="keyuanisshow">我有客源<i class="icon-phone"></i></span></p>
+  </div>
 	<div>
 		<confirm-msg :hintMsg="hintMsg" ref="confirmMsg" :msgFlag="msgFlag" :text="confirmMsgText" @confirmMsg="isConfirmMsg" :sendMsg="confirmMsgSendMsg"></confirm-msg>
     <confirm ref="confirm" :text="confirmText" :refresh="refresh" @confirm="confirm"></confirm>
@@ -141,6 +144,7 @@ export default {
       // 判断回复还是发送消息开关
       msgFlag: 1,
       contantsNews: [],
+      contantsNewsNum: null,
       refresh: false,
       keyuanisshow: true,
       stopbtns: true,
@@ -172,6 +176,12 @@ export default {
       setTimeout(() => {
         this.$refs.scroll.refresh()
       }, 30)
+    },
+    // 拨打电话
+    telPhone (num) {
+      if (num.indexOf('*') < 0) {
+        window.location.href = `tel:${num}`
+      }
     },
     // 拉黑名单
     backList () {
@@ -292,6 +302,7 @@ export default {
             item.replyPhone = self.projectDetailsList.phone
           })
           self.contantsNews = res.data.data ? res.data.data : []
+          self.contantsNewsNum = res.data.msg ? res.data.msg : -1
           console.log(self.contantsNews)
         }
       })
@@ -340,7 +351,7 @@ export default {
   .list
     position: fixed
     top: 0
-    bottom: 90px
+    bottom: 50px
     width: 100%
     background: #f4f1f4
     .xqcontent
@@ -452,10 +463,9 @@ export default {
           line-height: 25px
           border-radius: 5px 5px 0 0
           padding: 0 15px
+          span
+            float: right
   .contantfooter
-    position:fixed
-    bottom: 0
-    left: 0
     width: 100%
     line-height: 40px
     text-align: right
@@ -474,4 +484,25 @@ export default {
       i
         margin-left: 5px
         font-size: $font-size-medium
+.add-contantfooter
+  position: fixed
+  bottom: 0
+  width: 100%
+  line-height: 40px
+  text-align: right
+  font-size: 14px
+  box-sizing: border-box
+  padding: 0 10px
+  span
+    display:inline-block
+    height:22px
+    line-height: 22px
+    background: #f7732e
+    margin-left: 10px
+    color: #fff
+    border-radius: 3px
+    padding: 5px 15px
+    i
+      margin-left: 5px
+      font-size: $font-size-medium
 </style>

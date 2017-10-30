@@ -16,7 +16,7 @@
               </div>
               <div class="item-center" v-if="i.phone">
                 <p>{{i.username}}</p>
-                <p>{{i.phone}}</p>
+                <p @click.stop="telPhone(i.phone)">{{i.phone}}</p>
               </div>
             </router-link>
               <div class="item-bottom" v-if="!i.phone">
@@ -57,6 +57,11 @@
       },
       stoplist (i) {
         this.$emit('stoplist', i)
+      },
+      telPhone (num) {
+        if (num.indexOf('*') < 0) {
+          window.location.href = `tel:${num}`
+        }
       }
     }
   }
@@ -110,7 +115,7 @@
         height: 30px
         .btn, .btns
           font-size: 14px
-          height: 20px 
+          height: 20px
           line-height: 20px
           border-radius: 4px
           background: #f7732e
@@ -123,7 +128,7 @@
           border-radius: 5px
           color: #666
           padding: 2px 8px
-          height: 16px 
+          height: 16px
           line-height: 16px
           position: absolute
           left: 10px

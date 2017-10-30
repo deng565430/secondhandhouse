@@ -12,12 +12,13 @@
               </div>
               <div class="item-center">
                 <p>{{item.username}}</p>
-                <p>{{item.phone}}</p>
+                <p @click.stop="telPhone(item.phone)">{{item.phone}}</p>
                 <p>{{item.type}}</p>
-                <p v-if="item.ismy === 0"><i :class="item.contact === 0 ? 'icon-people' : 'icon-people2'"></i></p>
+                <p class="is-contact" v-if="item.ismy === 0"><img v-if="item.contact !== 0" :src="secondhousegou" alt=""> 已联系</p>
               </div>
               <div class="item-bottom">
-                <p v-if="item.count">已匹配 <span> {{item.count}} </span>人</p>
+                <p v-if="item.refuse === 1" style="color: #dc4900">被拒绝</p>
+                <p v-else-if="item.count">已匹配 <span> {{item.count}} </span>人</p>
                 <p v-else style="color: #dc4900">等待响应...</p>
                 <p v-if="item.ismy === 0">
                   <span v-if="item.contact === 0" class="btn bgc" @click.stop="sendMsg(item.roomId)">{{mark === 1 ? '我有客源' : '我有房源'}} <i class="icon-phone"></i></span>
@@ -53,11 +54,20 @@
         default: 1
       }
     },
+    data () {
+      return {
+        secondhousegou: require('common/image/secondhousegou.png')
+      }
+    },
     methods: {
       sendMsg (id) {
         this.$emit('alertMsg', id)
       },
-      look () {}
+      telPhone (num) {
+        if (num.indexOf('*') < 0) {
+          window.location.href = `tel:${num}`
+        }
+      }
     }
   }
 </script>
@@ -77,8 +87,13 @@
           line-height: 3
           text-align: center
           no-wrap()
-          i
+        .is-contact
+          color: #e5672c
+          img
             color: #e5672c
+            width: 15%
+            vertical-align: text-top
+
       .item-top
         p
           font-size: $font-size-medium

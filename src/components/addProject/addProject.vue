@@ -62,7 +62,6 @@
             <div class="item-100">
               <p><span>*</span>楼层:</p>
               <div class="radio">
-                <label><input name="Fruit" type="radio" v-model="floor" value="10001" />&nbsp; 无要求 </label>
                 <label><input name="Fruit" type="radio" v-model="floor" value="10002" />&nbsp; 低层 </label>
                 <label><input name="Fruit" type="radio" v-model="floor" value="10003" />&nbsp; 中层 </label>
                 <label><input name="Fruit" type="radio" v-model="floor" value="10004"/>&nbsp; 高层 </label>
@@ -71,7 +70,7 @@
           </div>
           <div class="item-bg">
             <div class="item-50">
-              <label class="label-40"><span>{{houseListActive === 0 ? '*' : ''}}</span>具体楼层</label>
+              <label class="label-40"><span></span>具体楼层</label>
               <input type="text" placeholder="请输入" v-model="concreteFloor" name="" value="" class="text">
               <span>楼</span>
             </div>
@@ -364,11 +363,6 @@ export default {
         }
         if (this.face === -1) {
           this.confirmText = '请选择朝向'
-          this.$refs.confirm.show()
-          return
-        }
-        if (this.concreteFloor === null) {
-          this.confirmText = '请输入具体楼层'
           this.$refs.confirm.show()
           return
         }
