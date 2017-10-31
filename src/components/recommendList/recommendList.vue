@@ -83,7 +83,7 @@ import { secondhHand, addClientResponse } from 'api/recommendList'
 export default {
   data () {
     return {
-      houseList: ['有房源', '有客源'],
+      houseList: ['找房源', '找客源'],
       houseListActive: 0,
       projectId: '',
       itemSelectType: [{

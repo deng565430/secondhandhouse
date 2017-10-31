@@ -14,7 +14,7 @@
                 <p>{{item.username}}</p>
                 <p>{{item.phone}}</p>
                 <p>{{item.type}}</p>
-                <p class="is-contact" v-if="item.ismy === 0"><img v-if="item.contact !== 0" :src="secondhousegou" alt=""> 已联系</p>
+                <p class="is-contact" v-if="item.ismy === 0"><img v-if="item.contact !== 0" :src="secondhousegou" alt=""> <span v-if="item.contact !== 0">已联系</span></p>
               </div>
               <div class="item-bottom">
                 <p v-if="item.refuse === 1" style="color: #dc4900">被拒绝</p>
