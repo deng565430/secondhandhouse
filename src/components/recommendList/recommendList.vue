@@ -7,8 +7,8 @@
     </router-link>
     <div>
       <div class="top-select">
-        <router-link tag="div" :to="{ path: '/addproject' }" class="write">
-          <p>发布</p>
+        <router-link tag="div" :to="{ path: `/addproject/${houseListActive}` }" class="write">
+          <p>发布{{sendData.mark === 1 ? '房源' : '客源'}}</p>
         </router-link>
         <ul class="item-list-show xiangying-top">
           <li v-for="(item, index) in houseList" :key="index" :class="houseListActive === index ? 'active' : ''" @click="houseListEvent(item, index)">{{item}}</li>
@@ -467,12 +467,12 @@ export default {
           padding-left: 10px
         .write
           text-align:left
-          width: 100px
+          width: 130px
           p
             display: inline-block
             border: 1px solid white
-            font-size: $font-size-small
-            padding: 5px
+            font-size: $font-size-small-s
+            padding: 4px
             margin: 2px 10px
             border-radius: 4px
           span

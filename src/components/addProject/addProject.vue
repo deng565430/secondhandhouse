@@ -1,15 +1,10 @@
 <template>
 <div id="addProject">
   <div class="title">
-    <my-title :title="'发布需求'"></my-title>
+    <my-title :title="title"></my-title>
     <router-link tag="div" :to="{ path: '/projectlist' }" class="my-list">
       <p>我的 <i class="icon-people2"></i></p>
     </router-link>
-    <div class="top-select">
-      <ul class="item-list-show xiangying-top">
-          <li v-for="(item, index) in houseList" :key="index" :class="houseListActive === index ? 'active' : ''" @click="houseListEvent(item, index)">{{item}}</li>
-        </ul>
-    </div>
   </div>
   <div>
     <scroll ref="scroll" class="list" :beforeScroll="true" @beforeScroll="beforeScroll">
@@ -266,11 +261,12 @@ export default {
   name: 'addProject',
   data () {
     return {
+      title: `发布${this.$route.params.mark === '0' ? '房源' : '客源'}需求`,
       confirmText: '请填写完整',
       isDisable: false,
       isSend: true,
       houseList: ['房源', '客源'],
-      houseListActive: 0,
+      houseListActive: Number(this.$route.params.mark),
       disabled: true,
       refresh: false,
       province: '全部',
@@ -308,12 +304,6 @@ export default {
     this._getTypeList()
   },
   methods: {
-    houseListEvent (item, index) {
-      this.houseListActive = index
-      setTimeout(() => {
-        this.$refs.scroll.refresh()
-      }, 30)
-    },
     send (e) {
       if (this.type === -1) {
         this.confirmText = '请选择物业类型'
@@ -553,37 +543,12 @@ export default {
           i
             vertical-align: top
             font-size: $font-size-medium
-      .top-select
-        display: flex
-        .item-list-show
-          width: 100%
-          display: flex
-          height: 30px
-          margin-bottom: 10px
-          padding: 0 19%
-          li
-            color: black
-            font-size: $font-size-medium
-            border: 1px solid #fff
-            line-height: 30px
-            width:50%
-            height: 30px
-            color: #fff
-          li:nth-child(1)
-            border-radius: 5px 0 0 5px
-            border-right: none
-          li:nth-child(2)
-            border-radius: 0 5px 5px 0
-            border-left: none
-          .active
-            background: #fff
-            color: #e5672c
     .sof-hint
       span
         color: red
     .list
       position: fixed
-      top: 40px
+      top: 0px
       bottom: 55px
       width: 100%
       padding-top: 50px
