@@ -349,13 +349,13 @@ export default {
       this._addClientResponse(data)
     },
     confirm () {
-      if (this.confirmText === '请先注册！') {
-        window.location.href = '/'
+      if (this.confirmText === '请先注册！' || this.confirmText === '请先登录！') {
+        window.location.href = '/registration'
       }
     },
     cancel () {
-      if (this.confirmText === '请先注册！') {
-        window.location.href = '/'
+      if (this.confirmText === '请先注册！' || this.confirmText === '请先登录！') {
+        window.location.href = '/registration'
       }
     },
     // 下拉加载
@@ -380,6 +380,11 @@ export default {
       secondhHand(this.sendData).then(res => {
         if (res.data.draw === 2) {
           this.confirmText = '请先注册！'
+          this.$refs.confirm.show()
+          this.hasMore = false
+        }
+        if (res.data.draw === 1) {
+          this.confirmText = '请先登录！'
           this.$refs.confirm.show()
           this.hasMore = false
         }
@@ -467,7 +472,7 @@ export default {
           padding-left: 10px
         .write
           text-align:left
-          width: 130px
+          width: 83px
           p
             display: inline-block
             border: 1px solid white
