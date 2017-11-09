@@ -37,7 +37,7 @@ export default [
     component: RecommendList,
     name: 'recommendList'
   }, {
-    path: '/addproject',
+    path: '/addproject/:mark',
     name: 'addproject',
     component: AddProject
   }, {

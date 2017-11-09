@@ -84,7 +84,7 @@
       confirm() {
         this.hide()
         const data = {
-          msg: this.msg,
+          msg: this._trim(this.msg),
           flag: this.msgFlag
         }
         this.$emit('confirmMsg', data)

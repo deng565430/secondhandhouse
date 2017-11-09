@@ -7,8 +7,8 @@
     </router-link>
     <div>
       <div class="top-select">
-        <router-link tag="div" :to="{ path: '/addproject' }" class="write">
-          <p><i class="icon-write"></i></p>
+        <router-link tag="div" :to="{ path: `/addproject/${houseListActive}` }" class="write">
+          <p>发布{{sendData.mark === 1 ? '房源' : '客源'}}</p>
         </router-link>
         <ul class="item-list-show xiangying-top">
           <li v-for="(item, index) in houseList" :key="index" :class="houseListActive === index ? 'active' : ''" @click="houseListEvent(item, index)">{{item}}</li>
@@ -65,7 +65,7 @@
   </scroll>
   <div>
     <confirm-msg :hintMsg="hintMsg" ref="confirmMsg" :text="confirmMsgText" @confirmMsg="isConfirmMsg" :sendMsg="confirmMsgSendMsg"></confirm-msg>
-    <confirm ref="confirm" :text="confirmText" :refresh="refresh" @confirm="confirm"></confirm>
+    <confirm ref="confirm" :text="confirmText" :refresh="refresh" @confirm="confirm" @cancel="cancel"></confirm>
   </div>
 </div>
 </template>
@@ -83,7 +83,7 @@ import { secondhHand, addClientResponse } from 'api/recommendList'
 export default {
   data () {
     return {
-      houseList: ['房源', '客源'],
+      houseList: ['找房源', '找客源'],
       houseListActive: 0,
       projectId: '',
       itemSelectType: [{
@@ -348,7 +348,16 @@ export default {
       console.log(this.projectId)
       this._addClientResponse(data)
     },
-    confirm () {},
+    confirm () {
+      if (this.confirmText === '请先注册！' || this.confirmText === '请先登录！') {
+        window.location.href = '/registration'
+      }
+    },
+    cancel () {
+      if (this.confirmText === '请先注册！' || this.confirmText === '请先登录！') {
+        window.location.href = '/registration'
+      }
+    },
     // 下拉加载
     searchMore () {
       this.hasMore = true
@@ -369,6 +378,16 @@ export default {
       this.sendData.start = 0
       this.projectList = []
       secondhHand(this.sendData).then(res => {
+        if (res.data.draw === 2) {
+          this.confirmText = '请先注册！'
+          this.$refs.confirm.show()
+          this.hasMore = false
+        }
+        if (res.data.draw === 1) {
+          this.confirmText = '请先登录！'
+          this.$refs.confirm.show()
+          this.hasMore = false
+        }
         if (res.data.draw === 0) {
           this.hasMore = false
           if (res.data.data.length < 1) {
@@ -443,7 +462,7 @@ export default {
             font-size: $font-size-medium
       .top-select
         display: flex
-        .write, .search
+        .search
           width: 100px
           line-height: 35px
           font-size: $font-size-large
@@ -453,9 +472,14 @@ export default {
           padding-left: 10px
         .write
           text-align:left
-          i
-            vertical-align: top
-            font-size: 32px
+          width: 83px
+          p
+            display: inline-block
+            border: 1px solid white
+            font-size: $font-size-small-s
+            padding: 4px
+            margin: 2px 10px
+            border-radius: 4px
           span
             font-size: $font-size-small
         .item-list-show

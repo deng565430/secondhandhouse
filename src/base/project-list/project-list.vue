@@ -5,8 +5,8 @@
           <li class="item" v-for="(i, index) in myprojects" v-if="i.roomid || i.sourceid">
             <router-link :to="{path:'/detail',query:{id: `${i.roomid||i.sourceid}`, match: `${i.match}`,  ismy: `${i.ismy}`, mark: `${mark}`, count: `${i.count || 0}`}}" tag="div" >
               <div class="item-top">
-                <p>发布编号：{{i.roomid||i.sourceid}}</p>
-                <!-- <p class="counts" v-if="i.count> 0"></p> -->
+                <p>发布编号：{{i.roomid || i.sourceid}}</p>
+                <p style="text-align: right">{{i.type}}</p>
               </div>
               <div class="item-center">
                 <p>{{i.city}}</p>
@@ -16,7 +16,7 @@
               </div>
               <div class="item-center" v-if="i.phone">
                 <p>{{i.username}}</p>
-                <p>{{i.phone}}</p>
+                <p @click.stop="telPhone(i.phone)">{{i.phone}}</p>
               </div>
             </router-link>
               <div class="item-bottom" v-if="!i.phone">
@@ -57,6 +57,11 @@
       },
       stoplist (i) {
         this.$emit('stoplist', i)
+      },
+      telPhone (num) {
+        if (num.indexOf('*') < 0) {
+          window.location.href = `tel:${num}`
+        }
       }
     }
   }
@@ -82,18 +87,10 @@
         padding: 0 10px
         position: relative
         p
+          width: 50%
           line-height: 30px
           font-size: 14px
-        .counts
-          position: absolute
-          top: -3px
-          left: -2px
-          margin-top: 2px
-          line-height: 26px
-          height: 45px
-          width: 50px
-          background: url('./../../common/image/new.png') no-repeat center center
-          background-size: 100% 100%
+          no-wrap()
       .item-center
         height: 40px
         line-height: 40px
@@ -110,7 +107,7 @@
         height: 30px
         .btn, .btns
           font-size: 14px
-          height: 20px 
+          height: 20px
           line-height: 20px
           border-radius: 4px
           background: #f7732e
@@ -123,7 +120,7 @@
           border-radius: 5px
           color: #666
           padding: 2px 8px
-          height: 16px 
+          height: 16px
           line-height: 16px
           position: absolute
           left: 10px
