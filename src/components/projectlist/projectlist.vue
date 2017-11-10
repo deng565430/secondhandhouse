@@ -108,15 +108,15 @@ export default {
       }, {
         'title': '我的客源',
         'key': 2,
-        'img': people1
+        'img': people2
       }, {
         'title': '找的房源',
         'key': 3,
         'img': fang2
       }, {
-        'title': '找到客源',
+        'title': '找的客源',
         'key': 4,
-        'img': people2
+        'img': people1
       }]
     }
   },
@@ -318,19 +318,6 @@ body, html
   height: 100%
   width: 100%
   background: #f4f1f4
-  .ripple
-    position:absolute
-    background:rgba(0,0,0,.15)
-    border-radius:100%
-    transform:scale(0)
-    pointer-events:none 
-  .ripple .show
-    animation:ripple .75s ease-out  
-  @keyframes ripple
-    to {
-      transform:scale(2)
-      opacity:0
-    } 
   #projectlists
     background: #f4f1f4
     .titles
@@ -446,7 +433,7 @@ body, html
              color: #000
          .list
            position: fixed
-           top: 22px
+           top: 31px
            bottom: 120px
            width: 100%
            padding-top: 148px
