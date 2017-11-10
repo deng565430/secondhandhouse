@@ -186,15 +186,19 @@ export default {
       this.bdactive = 0
       if (index === 1 || index === 2) {
         this.isfabu = 0
+        this.ismy = 1
       } else {
         this.isfabu = 1
+        this.ismy = 0
       }
       getfabuNum(this.isfabu).then((res) => {
         if (index === 1 || index === 3) {
           this.operate = 1
+          this.mark = 1
           this.contentbat = res.data.data.room
         } else {
           this.operate = 2
+          this.mark = 2
           this.contentbat = res.data.data.source
         }
       })
