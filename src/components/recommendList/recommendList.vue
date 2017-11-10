@@ -25,9 +25,9 @@
     </div>
   <div class="pop-box">
     <div>
-      <select-box v-if="showCitysList" @showCitysListEvent="showCitysListEvent"></select-box>
+      <select-box v-if="showCitysList" @hideSelectBox="hidePopBox" @showCitysListEvent="showCitysListEvent"></select-box>
     </div>
-    <pop-box v-if="showTypeList" :typeList="typeList" @showPopBox="showPopBox">
+    <pop-box v-if="showTypeList" @hidePopBox="hidePopBox" :typeList="typeList" @showPopBox="showPopBox">
       <div>
         <div class="pop-list">
           <ul class="pop-list-child" v-if="typeList.length">
@@ -268,6 +268,10 @@ export default {
       }
     },
     showPopBox () {},
+    hidePopBox () {
+      this.showTypeList = false
+      this.showCitysList = false
+    },
     // 选择几室几厅
     selectTypeRoom (item, index) {
       this.selectTypeIndexRoom = index
@@ -472,13 +476,15 @@ export default {
           padding-left: 10px
         .write
           text-align:left
-          width: 83px
+          width: 120px
+          margin-right: 10px
           p
+            padding: 6px 10px
             display: inline-block
             border: 1px solid white
-            font-size: $font-size-small-s
-            padding: 4px
-            margin: 2px 10px
+            font-size: $font-size-medium
+            margin: 0px 10px
+            margin-top: -5px
             border-radius: 4px
           span
             font-size: $font-size-small

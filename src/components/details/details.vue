@@ -2,21 +2,18 @@
 <div id="projectdetails">
 	<div class="xqTitle">
   		<MyTitle :title="title"></MyTitle>
-  		<router-link tag="div" :to="{ path: '/projectlist' }" class="my-list">
-	      	<p>我的 <i class="icon-people2"></i></p>
-	    </router-link>
 	</div>
 
 	<Scroll ref="scroll" class="list" :data="contantsNews">
 	<div class="xqcontent">
 		<div class="publishPeople">
 			<div class="title">
-				<p>发布人</p>
+				<p>发布时间：{{projectDetailsList.create_time}}</p>
 				<p>已匹配<span>{{count == 'null' ? 0 : count}}</span>人</p>
 			</div>
 			<div class="content">
-				<div>用户: <span class="name">{{projectDetailsList.username}}</span></div>
-				<div @click="telPhone(projectDetailsList.phone)">手机号:<span class="phone">{{projectDetailsList.phone}}</span></div>
+				<div>发布人: <span class="name">{{projectDetailsList.username}}</span></div>
+				<div @click="telPhone(projectDetailsList.phone)">手机号:<span class="phone">{{projectDetailsList.phone}} <img class="phone-img" :src="projectDetailsList.phone ? (projectDetailsList.phone.indexOf('*') > -1 ? '' : phoneImg) : ''" alt=""></span></div>
 				<div v-if="ismy === '0'" class="hezuo"><span>{{match === '0' ? '未合作过 ' : '已合作过 '}} <i :class="match === '0' ? 'icon-people' : 'icon-people2'" v-if="ismy === '0'"></i></span></div>
 			</div>
 			<div style="display: none;" class="footer" v-if="ismy === '0'"  @click="backList">
@@ -61,8 +58,8 @@
 							<div><span>户型: </span><span class="colors">{{projectDetailsList.huxing}}</span></div>
 							<div><span>绿化率: </span><span class="colors">{{projectDetailsList.greenRate}}</span></div>
 						</div>
-            <div class="itme" v-if="mark === 2">
-              <div><span>首付比例: </span><span class="colors">{{projectDetailsList.downPaymentl}}</span></div>
+            <div class="itme" v-if="mark === '2'">
+              <div><span>首付预算: </span><span class="colors">{{projectDetailsList.downPaymentl}}</span></div>
               <div><span>社保: </span><span class="colors">{{projectDetailsList.social}}</span></div>
               <div><span>客源人数: </span><span class="colors">{{projectDetailsList.clientCount}}</span></div>
             </div>
@@ -78,7 +75,7 @@
 		</div>
 		<div class="lxdetails">
 			<div class="title">
-        <p>联系详情<span>{{contantsNewsNum === '-1' ? '' : contantsNewsNum + '条消息未处理'}}</span></p>
+        <p>联系详情<span v-html="contantsNewsNum === '-1' ? '' : contantsNewsNum + '条消息未处理'"></span></p>
 			</div>
 			<div>
 				<Cdetail
@@ -117,6 +114,7 @@ import Xqdetail from 'base/contant-detail/xiangyingdetail'
 import ConfirmMsg from 'base/confirm-msg/confirm-msg'
 import Confirm from 'base/confirm/confirm'
 import { getDetails, addBlackList, getDetailsNews, replyClientResponse, updateClientSourceStatus, refuseClientResponse, addClientResponse } from 'api/details.js'
+import { timeFormat } from 'common/js/util.js'
 export default {
 
   name: 'details',
@@ -131,6 +129,7 @@ export default {
   data () {
     return {
       projectDetailsList: {},
+      phoneImg: require('common/image/telephone.png'),
       title: this.$route.query.mark === '2' ? '客源详情' : '房源详情',
       hintMsg: '回复消息之后双方都可以看到联系方式！',
       isStopThisProject: true,
@@ -144,7 +143,7 @@ export default {
       // 判断回复还是发送消息开关
       msgFlag: 1,
       contantsNews: [],
-      contantsNewsNum: null,
+      contantsNewsNum: '-1',
       refresh: false,
       keyuanisshow: true,
       stopbtns: true,
@@ -279,6 +278,7 @@ export default {
         console.log(res)
         if (res.data.code === 0) {
           this.projectDetailsList = res.data.data ? res.data.data : {}
+          this.projectDetailsList.create_time = this.projectDetailsList.create_time ? timeFormat('yyyy-MM-dd hh:mm', new Date(this.projectDetailsList.create_time)) : ''
           this.userId = res.data.data ? (res.data.data.userid ? res.data.data.userid : '') : ''
           this._getDetailsNews()
         }
@@ -383,6 +383,9 @@ export default {
            color: #666
            i
              color: #e5672c
+         .phone-img
+          width: 12px
+          vertical-align: middle    
         .footer
          height: 46px
          line-height: 46px

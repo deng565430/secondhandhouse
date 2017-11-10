@@ -1,13 +1,13 @@
 <template>
   <transition name="type-list">
-    <div class="show-type-list" ref="showType">
+    <div class="show-type-list" ref="showType" @click="hideEvent">
         <scroll :pullup="pullup" class="list" :data="typeList">
           <slot></slot>
         </scroll>
     </div>
   </transition>
 </template>
-<script type="text/ecmascript-6">
+<script>
   import Scroll from 'base/scroll/scroll'
   export default {
     props: {
@@ -38,6 +38,9 @@
       Scroll
     },
     methods: {
+      hideEvent () {
+        this.$emit('hidePopBox')
+      },
       isShow() {
         this.$emit('showPopBox', this.showTypeList)
       },
