@@ -191,8 +191,10 @@ export default {
       }
       getfabuNum(this.isfabu).then((res) => {
         if (index === 1 || index === 3) {
+          this.operate = 1
           this.contentbat = res.data.data.room
         } else {
+          this.operate = 2
           this.contentbat = res.data.data.source
         }
       })
