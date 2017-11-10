@@ -1,11 +1,12 @@
 <template>
 <div id="projectlists">
   <div class="titles">
-	 <MyTitle :title="title"></MyTitle>
-  </div>	
+	 <MyTitle :title="title" ></MyTitle>
+    </div>	
   <div class="contants">
   	<div class="headertabs">
     <!-- 发布响应切换 -->
+<<<<<<< HEAD
   	  <!--  <select class="selectcss" @change="changeselect" ref="selectes">
 	    	<option v-for="(itme, index) in selects">{{itme}}</option>
 	    </select> -->
@@ -28,11 +29,30 @@
             @click="getTabsqh(index)">{{itme}}</li>
           </ul>  
       </div>  
+=======
+  	   <!-- <select class="selectcss" @change="changeselect" ref="selectes">
+	    	<option v-for="(itme, index) in selects">{{itme}}</option>
+	    </select> -->
+      <!-- 房源客源切换 -->
+  		<!-- <ul class="tabbtn">
+          <li 
+          v-for="(itme, index) in tabs" 
+          :class="bkindex === index ? 'active': ''"
+          @click="tabsqh(index)">{{itme}}</li>
+        </ul> -->
+        <ul class="listtab">
+          <li v-for="i in lists" @click="tabsqh(i.key)" class="btneffect">
+            <div class="btneffect"><img :src="i.img"/></div>
+            <div class="btneffect" :class="i.key === idnexcolor ? 'active': ''">{{i.title}}</div>
+          </li>
+        </ul>
+>>>>>>> 909ce19e480d6615f4e687357e5a78077bfac05b
   	</div>
   	<div class="contanttab">
     <!-- 三种状态切换 -->
   		<ul class="ctwrap">
   			<li 
+        class="btneffect"
   			v-for="(itme, index) in contentbat" 
             :class="bdactive === index ? 'active': ''"
             @click="contenttab(index)">{{itme.status}}<span style="color:#e5672c">{{itme.count}}</span></li>
@@ -68,6 +88,11 @@ import Confirm from 'base/confirm/confirm'
 import Loading from 'base/loading/loading'
 import ProjectList from 'base/project-list/project-list.vue'
 import {getprojectList, getfabuNum, huifuList} from 'api/myList.js'
+
+import fang1 from 'common/image/fang1.png'
+import fang2 from 'common/image/fang2.png'
+import people1 from 'common/image/people1.png'
+import people2 from 'common/image/people2.png'
 export default {
 
   name: 'projectlist',
@@ -84,8 +109,13 @@ export default {
       tabs: ['房源', '客源'],
       contentbat: ['全部', '待响应', '待联系', '已停止'],
       selects: ['发布', '响应'],
+<<<<<<< HEAD
       sendbkindex: 0,
       getbkindex: -1,
+=======
+      bkindex: 0,
+      idnexcolor: 1,
+>>>>>>> 909ce19e480d6615f4e687357e5a78077bfac05b
       bdactive: 0,
       myprojects: [],
       startnum: 0,
@@ -100,10 +130,28 @@ export default {
       contact: null,
       ismy: 1,
       mark: 1,
-      zanwu: false
+      zanwu: false,
+      lists: [{
+        'title': '我的房源',
+        'key': 1,
+        'img': fang1
+      }, {
+        'title': '我的客源',
+        'key': 2,
+        'img': people1
+      }, {
+        'title': '找的房源',
+        'key': 3,
+        'img': fang2
+      }, {
+        'title': '找到客源',
+        'key': 4,
+        'img': people2
+      }]
     }
   },
   created () {
+    this.idnexcolor = 1
     this._getfabuNum(this.isfabu)
     this._getprojectList(this.startnum, 10, this.isfabu, this.isstatus)
   },
@@ -158,6 +206,7 @@ export default {
       this.startnum++
       this._getprojectList(this.startnum, 10, this.isfabu, this.isstatus)
     },
+<<<<<<< HEAD
     // 我发布的房源客源
     sendTabsqh (index) {
       this.isfabu = 0
@@ -188,25 +237,49 @@ export default {
       this.isfabu = 1
       this.getbkindex = index
       this.sendbkindex = -1
+=======
+    // 房源客源切换
+    tabsqh (index) {
+      console.log(index)
+      this.idnexcolor = index
+>>>>>>> 909ce19e480d6615f4e687357e5a78077bfac05b
       this.startnum = 0
       this.isstatus = 0
       this.myprojects = []
       this.bdactive = 0
-      if (index === 0) {
-        this.operate = 1
-        this.mark = 1
-        getfabuNum(this.isfabu).then((res) => {
-          this.contentbat = res.data.data.room
-        })
-        this._getprojectList(this.startnum, 10, this.isfabu, this.isstatus)
+      if (index === 1 || index === 2) {
+        this.isfabu = 0
       } else {
-        this.operate = 2
-        this.mark = 2
-        getfabuNum(this.isfabu).then((res) => {
-          this.contentbat = res.data.data.source
-        })
-        this._getprojectList(this.startnum, 10, this.isfabu, this.isstatus)
+        this.isfabu = 1
       }
+      getfabuNum(this.isfabu).then((res) => {
+        if (index === 1 || index === 3) {
+          this.contentbat = res.data.data.room
+        } else {
+          this.contentbat = res.data.data.source
+        }
+      })
+      this._getprojectList(this.startnum, 10, this.isfabu, this.isstatus)
+      // this.bkindex = index
+      // this.startnum = 0
+      // this.isstatus = 0
+      // this.myprojects = []
+      // this.bdactive = 0
+      // if (index === 0) {
+      //   this.operate = 1
+      //   this.mark = 1
+      //   getfabuNum(this.isfabu).then((res) => {
+      //     this.contentbat = res.data.data.room
+      //   })
+      //   this._getprojectList(this.startnum, 10, this.isfabu, this.isstatus)
+      // } else {
+      //   this.operate = 2
+      //   this.mark = 2
+      //   getfabuNum(this.isfabu).then((res) => {
+      //     this.contentbat = res.data.data.source
+      //   })
+      //   this._getprojectList(this.startnum, 10, this.isfabu, this.isstatus)
+      // }
     },
     // 三个切换
     contenttab (index) {
@@ -303,10 +376,24 @@ export default {
 
 <style scoped lang="stylus" rel="stylesheet/stylus">
 @import "~common/stylus/variable"
+@import "~common/stylus/base"
 body, html
   height: 100%
   width: 100%
   background: #f4f1f4
+  .ripple
+    position:absolute
+    background:rgba(0,0,0,.15)
+    border-radius:100%
+    transform:scale(0)
+    pointer-events:none 
+  .ripple .show
+    animation:ripple .75s ease-out  
+  @keyframes ripple
+    to {
+      transform:scale(2)
+      opacity:0
+    } 
   #projectlists
     background: #f4f1f4
     .titles
@@ -326,8 +413,7 @@ body, html
        margin-top: 50px
        .headertabs
          position: fixed
-         height: 40px
-         line-height: 40px
+         height: 70px
          background: linear-gradient(left, #ee6354, #f87529)
          display: flex
          font-size: $font-size-medium
@@ -337,6 +423,25 @@ body, html
          top: 50px
          left: 0
          z-index: 111
+         border-bottom:1px solid #d2d2d2
+         .listtab
+           display: flex
+           background: #fff
+           font-size: 14px
+           width: 100%
+           li
+             width: 25%
+             text-align:center
+             padding: 10px 0
+             overflow: hidden
+             position: relative
+             .active
+              color: #e5672c
+             div:nth-child(1)
+               margin-bottom: 10px
+             img
+               width: 20px
+               height: 20px
          .selectcss
            position: absolute
            left: 10px
@@ -352,6 +457,7 @@ body, html
          .head-title
            width: 50%
            display: flex
+<<<<<<< HEAD
            padding: 0 10px
            p
              width: 20%
@@ -377,6 +483,28 @@ body, html
               border-radius: 0 5px 5px 0
               border-left: none
             .active
+=======
+           text-align: center
+           line-height: 30px
+           color: #fff
+           font-size: 14px
+           border: 1px solid #fff
+           border-radius: 5px
+           li
+             width: 50%
+             padding: 0 30px
+             position:relative
+             margin:2em
+             letter-spacing:.2em
+             font-weight:bold
+             background:#999
+             cursor:pointer
+             overflow:hidden
+             user-select:none
+           li:nth-child(1)
+             border-right: 1px solid #fff
+           .active
+>>>>>>> 909ce19e480d6615f4e687357e5a78077bfac05b
               background: #fff
               color: #e5672c
        .contanttab
@@ -390,12 +518,15 @@ body, html
            text-align:justify
            justify-content: space-around
            position:fixed
-           top: 90px
+           top: 128px
            left: 0
            width: 100%
            z-index: 111
            background: #fff
+           border-top:1px solid #d2d2d2
            li
+             position: relative
+             overflow: hidden
              width: 100%
              text-align: center
              border-right: 1px solid #d2d2d2
@@ -408,7 +539,7 @@ body, html
              color: #000
          .list
            position: fixed
-           top: -3px
+           top: 22px
            bottom: 120px
            width: 100%
            padding-top: 148px

@@ -11,6 +11,7 @@ import './config/rem'
 import VueLazyload from 'vue-lazyload'
 
 import 'common/stylus/index.styl'
+import 'common/js/clickEffect.js'
 
 // 解决移动端300毫秒的延迟
 if ('addEventListener' in document) {
