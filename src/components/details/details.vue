@@ -327,6 +327,7 @@ export default {
 
 <style scoped lang="stylus" rel="stylesheet/stylus">
 @import "~common/stylus/variable"
+
 #projectdetails
   background: #f4f1f4
   .xqTitle
