@@ -376,13 +376,10 @@ body, html
            background: none
            color: #fff
            font-size: 12px
-<<<<<<< HEAD
          .tabbtn
            height: 30px
-=======
          .head-title
            width: 50%
->>>>>>> a22264a1d08b8db47f97c955177d1b44897fe2ef
            display: flex
            text-align: center
            line-height: 30px
