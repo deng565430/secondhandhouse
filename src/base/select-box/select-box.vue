@@ -1,6 +1,6 @@
 <template>
   <transition name="pop-list">
-    <div class="pop" v-if="showCitysList" >
+    <div class="pop" v-if="showCitysList" @click="hideSelectBox">
     <div class="show-type-list" ref="showType">
         <scroll :pullup="true" class="list" :data="provincelist">
           <div class="pop-city-list" ref="cityList">
@@ -85,6 +85,9 @@ export default {
   mounted() {},
   methods: {
     showCityList () {},
+    hideSelectBox () {
+      this.$emit('hideSelectBox')
+    },
     showPopBox() {},
     // 选择省 市 区
     selectProvince(item, index) {

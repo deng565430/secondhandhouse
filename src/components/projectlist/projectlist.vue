@@ -6,16 +6,28 @@
   <div class="contants">
   	<div class="headertabs">
     <!-- 发布响应切换 -->
-  	   <select class="selectcss" @change="changeselect" ref="selectes">
+  	  <!--  <select class="selectcss" @change="changeselect" ref="selectes">
 	    	<option v-for="(itme, index) in selects">{{itme}}</option>
-	    </select>
+	    </select> -->
       <!-- 房源客源切换 -->
-  		<ul class="tabbtn">
-          <li 
-          v-for="(itme, index) in tabs" 
-          :class="bkindex === index ? 'active': ''"
-          @click="tabsqh(index)">{{itme}}</li>
-        </ul>
+      <div class="head-title">
+        <p>我的</p>
+    		<ul class="tabbtn">
+            <li 
+            v-for="(itme, index) in tabs" 
+            :class="sendbkindex === index ? 'active': ''"
+            @click="sendTabsqh(index)">{{itme}}</li>
+          </ul>
+      </div>
+      <div class="head-title">
+        <p>找的</p>
+        <ul class="tabbtn">
+            <li 
+            v-for="(itme, index) in tabs" 
+            :class="getbkindex === index ? 'active': ''"
+            @click="getTabsqh(index)">{{itme}}</li>
+          </ul>  
+      </div>  
   	</div>
   	<div class="contanttab">
     <!-- 三种状态切换 -->
@@ -72,7 +84,8 @@ export default {
       tabs: ['房源', '客源'],
       contentbat: ['全部', '待响应', '待联系', '已停止'],
       selects: ['发布', '响应'],
-      bkindex: 0,
+      sendbkindex: 0,
+      getbkindex: -1,
       bdactive: 0,
       myprojects: [],
       startnum: 0,
@@ -145,9 +158,36 @@ export default {
       this.startnum++
       this._getprojectList(this.startnum, 10, this.isfabu, this.isstatus)
     },
-    // 房源客源切换
-    tabsqh (index) {
-      this.bkindex = index
+    // 我发布的房源客源
+    sendTabsqh (index) {
+      this.isfabu = 0
+      this.sendbkindex = index
+      this.getbkindex = -1
+      this.startnum = 0
+      this.isstatus = 0
+      this.myprojects = []
+      this.bdactive = 0
+      if (index === 0) {
+        this.operate = 1
+        this.mark = 1
+        getfabuNum(this.isfabu).then((res) => {
+          this.contentbat = res.data.data.room
+        })
+        this._getprojectList(this.startnum, 10, this.isfabu, this.isstatus)
+      } else {
+        this.operate = 2
+        this.mark = 2
+        getfabuNum(this.isfabu).then((res) => {
+          this.contentbat = res.data.data.source
+        })
+        this._getprojectList(this.startnum, 10, this.isfabu, this.isstatus)
+      }
+    },
+    // 我响应的房源客源
+    getTabsqh (index) {
+      this.isfabu = 1
+      this.getbkindex = index
+      this.sendbkindex = -1
       this.startnum = 0
       this.isstatus = 0
       this.myprojects = []
@@ -290,6 +330,8 @@ body, html
          line-height: 40px
          background: linear-gradient(left, #ee6354, #f87529)
          display: flex
+         font-size: $font-size-medium
+         line-height: 30px
          justify-content: center
          width: 100%
          top: 50px
@@ -307,21 +349,34 @@ body, html
            background: none
            color: #fff
            font-size: 12px
-         .tabbtn
-           height: 30px
+         .head-title
+           width: 50%
            display: flex
-           text-align: center
-           line-height: 30px
-           color: #fff
-           font-size: 14px
-           border: 1px solid #fff
-           border-radius: 5px
-           li
-             width: 50%
-             padding: 0 30px
-           li:nth-child(1)
-             border-right: 1px solid #fff
-           .active
+           padding: 0 10px
+           p
+             width: 20%
+             font-size: $font-size-medium-x
+             color: white
+         .tabbtn
+            width: 80%
+            display: flex
+            height: 30px
+            margin-bottom: 10px
+            li
+              color: black
+              font-size: $font-size-medium
+              border: 1px solid #fff
+              line-height: 30px
+              width:50%
+              height: 30px
+              text-align: center
+              color: #fff
+            li:nth-child(1)
+              border-radius: 5px 0 0 5px
+            li:nth-child(2)
+              border-radius: 0 5px 5px 0
+              border-left: none
+            .active
               background: #fff
               color: #e5672c
        .contanttab

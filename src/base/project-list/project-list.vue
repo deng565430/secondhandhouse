@@ -5,7 +5,8 @@
           <li class="item" v-for="(i, index) in myprojects" v-if="i.roomid || i.sourceid">
             <router-link :to="{path:'/detail',query:{id: `${i.roomid||i.sourceid}`, match: `${i.match}`,  ismy: `${i.ismy}`, mark: `${mark}`, count: `${i.count || 0}`}}" tag="div" >
               <div class="item-top">
-                <p>发布编号：{{i.roomid || i.sourceid}}</p>
+                <!-- <p>发布编号：{{i.roomid || i.sourceid}}</p> -->
+                <p>{{timeFormat('yyyy-MM-dd hh:mm', new Date(i.create_time))}}</p>
                 <p style="text-align: right">{{i.type}}</p>
               </div>
               <div class="item-center">
@@ -32,7 +33,8 @@
   </div>
 </template>
 
-<script type="text/ecmascript-6">
+<script>
+  import { timeFormat } from 'common/js/util.js'
   export default {
     props: {
       myprojects: {
@@ -46,6 +48,11 @@
       zanwu: {
         type: Boolean,
         default: false
+      }
+    },
+    data () {
+      return {
+        timeFormat: timeFormat
       }
     },
     methods: {
