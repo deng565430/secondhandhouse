@@ -17,9 +17,9 @@
           @click="tabsqh(index)">{{itme}}</li>
         </ul> -->
         <ul class="listtab">
-          <li v-for="i in lists" @click="tabsqh(i.key)" class="btneffect">
-            <div class="btneffect"><img :src="i.img"/></div>
-            <div class="btneffect" :class="i.key === idnexcolor ? 'active': ''">{{i.title}}</div>
+          <li v-for="i in lists" @click="tabsqh(i.key)" :class="bkindexs === i.key ? 'actives': ''">
+            <div class=""><img :src="i.img"/></div>
+            <div class="" :class="i.key === idnexcolor ? 'active': ''">{{i.title}}</div>
           </li>
         </ul>
   	</div>
@@ -27,7 +27,7 @@
     <!-- 三种状态切换 -->
   		<ul class="ctwrap">
   			<li 
-        class="btneffect"
+        class=""
   			v-for="(itme, index) in contentbat" 
             :class="bdactive === index ? 'active': ''"
             @click="contenttab(index)">{{itme.status}}<span style="color:#e5672c">{{itme.count}}</span></li>
@@ -85,6 +85,7 @@ export default {
       contentbat: ['全部', '待响应', '待联系', '已停止'],
       selects: ['发布', '响应'],
       bkindex: 0,
+      bkindexs: 1,
       idnexcolor: 1,
       bdactive: 0,
       myprojects: [],
@@ -178,12 +179,14 @@ export default {
     },
     // 房源客源切换
     tabsqh (index) {
+      console.log(this.bdactive)
       console.log(index)
       this.idnexcolor = index
       this.startnum = 0
       this.isstatus = 0
       this.myprojects = []
       this.bdactive = 0
+      this.bkindexs = index
       if (index === 1 || index === 2) {
         this.isfabu = 0
         this.ismy = 1
@@ -324,6 +327,7 @@ body, html
   height: 100%
   width: 100%
   background: #f4f1f4
+  color: #333 !important
   #projectlists
     background: #f4f1f4
     .titles
@@ -341,6 +345,7 @@ body, html
         padding: 10px
     .contants
        margin-top: 50px
+       color: #333
        .headertabs
          position: fixed
          height: 70px
@@ -369,7 +374,8 @@ body, html
                margin-bottom: 10px
              img
                width: 20px
-               height: 20px
+           .actives
+             background: #f2f2f2 
          .selectcss
            position: absolute
            left: 10px
