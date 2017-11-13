@@ -31,10 +31,12 @@ const MyProjectList = (resolve) => {
 export default [
   {
     path: '/',
-    component: RecommendList
+    component: RecommendList,
+    meta: { keepAlive: true }
   }, {
     path: '/recommend',
     component: RecommendList,
+    meta: { keepAlive: true },
     name: 'recommendList'
   }, {
     path: '/addproject/:mark',
@@ -51,7 +53,7 @@ export default [
   }, {
     path: '/projectlist',
     name: 'projectlist',
-    component: MyProjectList
-    // meta: { keepAlive: true }
+    component: MyProjectList,
+    meta: { keepAlive: true }
   }
 ]

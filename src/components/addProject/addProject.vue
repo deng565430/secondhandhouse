@@ -2,9 +2,6 @@
 <div id="addProject">
   <div class="title">
     <my-title :title="title"></my-title>
-    <router-link tag="div" :to="{ path: '/projectlist' }" class="my-list">
-      <p>我的 <i class="icon-people2"></i></p>
-    </router-link>
   </div>
   <div>
     <scroll ref="scroll" class="list" :beforeScroll="true" @beforeScroll="beforeScroll">
@@ -532,17 +529,6 @@ export default {
       z-index: 66
       top: 0
       background: linear-gradient(left, #ee6354, #f87529)
-      .my-list
-        position: absolute
-        right: 10px
-        top: 10px
-        font-size: $font-size-medium
-        padding: 10px
-        p
-          font-size: $font-size-medium-x
-          i
-            vertical-align: top
-            font-size: $font-size-medium
     .sof-hint
       span
         color: red
