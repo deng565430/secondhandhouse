@@ -209,17 +209,8 @@
               </select>
             </div>
             <div class="item-50">
-              <label class="label-40"><span></span>首付比例</label>
-              <select name="" class="select" v-model="downPayment">
-                <option value="-1">请选择</option>
-                <option value="0">无</option>
-                <option value="1">10%以下</option>
-                <option value="2">10%-20%</option>
-                <option value="3">20%-30%</option>
-                <option value="4">30%-40%</option>
-                <option value="5">40%-50%</option>
-                <option value="5">50%以上</option>
-              </select>
+              <label class="label-40"><span></span>首付预算</label>
+              <input type="text" placeholder="请输入" v-model="downPayment" name="" value="" class="text">
             </div>
           </div>
           <div class="item-bg" v-if="houseListActive !== 0">
@@ -292,7 +283,7 @@ export default {
       remark: null,
       census: null,
       social: -1,
-      downPayment: -1,
+      downPayment: null,
       clientCount: null
     }
   },

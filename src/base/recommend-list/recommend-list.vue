@@ -18,10 +18,10 @@
               </div>
               <div class="item-bottom">
                 <p v-if="item.refuse === 1" style="color: #dc4900">被拒绝</p>
-                <p v-else-if="item.count">已匹配 <span> {{item.count}} </span>人</p>
+                <p v-else-if="item.count">总响应 <span> {{item.countAll}}</span> 人 已匹配 <span> {{item.count}} </span>人</p>
                 <p v-else style="color: #dc4900">等待响应...</p>
                 <p v-if="item.ismy === 0">
-                  <span v-if="item.contact === 0" class="btn bgc" @click.stop="sendMsg(item.roomId)">{{mark === 1 ? '我有客源' : '我有房源'}} <i class="icon-phone"></i></span>
+                  <span v-if="item.contact === 0" class="btn bgc" @click.stop="sendMsg(item.roomId)">{{'联系TA'}} <i class="icon-phone"></i></span>
                   <span v-else-if="item.match === 0" style="color:red">等待回复</span>
                   <span v-else-if="item.match === 1" style="color:green">查看回复</span>
                 </p>
@@ -97,8 +97,9 @@
           font-size: $font-size-small
       .item-bottom
         display: flex
+        >p
+          width: 50%
         p:first-child
-          width: 100px
           line-height: 3
           font-size: $font-size-small
           text-align: left
@@ -109,7 +110,6 @@
         p:last-child
           box-sizing: border-box
           padding-top: 10px
-          width: 100%
           span
             float: right
             margin: 0 5px
