@@ -43,10 +43,10 @@
                   </select>
             </div>
             <div class="item-50">
-              <label class="label-40"><span>*</span>物业类型</label>
+              <label class="label-40"><span>*</span>物业类型&nbsp; </label>
               <select name="" class="select" v-model="type">
                 <option value="-1">请选择</option>
-                <option :value="item" v-for="item in tenementTypeList">{{item}}</option>
+                <option :key="item" v-for="item in tenementTypeList">{{item}}</option>
               </select>
             </div>
           </div>
@@ -123,21 +123,21 @@
               <label class="label-33"><span>*</span>省:
                   <select name="" class="select" v-model="province" @change="selectProvince" v-if="!isDisable">
                     <option value="全部" selected="selected">全部</option>
-                    <option :value="item" v-for="item in provinceList">{{item}}</option>
+                    <option :key="item" v-for="item in provinceList">{{item}}</option>
                   </select>
                   <input v-else type="text" name="" v-model="province">
                 </label>
               <label class="label-33"><span>*</span>市:
                   <select name="" class="select" v-model="city" @change="selectCity" v-if="!isDisable">
                     <option value="全部" selected="selected">全部</option>
-                    <option :value="item" v-for="item in cityList">{{item}}</option>
+                    <option :key="item" v-for="item in cityList">{{item}}</option>
                   </select>
                   <input v-else type="text" name="" v-model="city">
                 </label>
               <label class="label-33"><span>*</span>区:
                   <select name="" class="select" v-model="district" @change="selectDistrict" v-if="!isDisable">
                     <option value="全部" selected="selected">全部</option>
-                    <option :value="item" v-for="item in districtList">{{item}}</option>
+                    <option :key="item" v-for="item in districtList">{{item}}</option>
                   </select>
                   <input v-else type="text" name="" v-model="district">
                 </label>
@@ -145,7 +145,7 @@
           </div>
           <div class="item-bg">
             <div class="item-100">
-              <label class="label-20"><span>*</span>户型</label>
+              <label class="label-20"><span>*</span>户型&nbsp;</label>
               <select name="" class="select" v-model="room">
                 <option value="-1">请选择</option>
                 <option value="1">一</option>
@@ -189,8 +189,8 @@
             <div class="item-50"  v-if="houseListActive !== 0">
               <label class="label-25"><span>*</span>户籍</label>
               <div class="radio">
-                <label><input name="huji" type="radio" value="1" v-model="census" />&nbsp; 本地 </label>&nbsp;
-                <label><input name="huji" type="radio" value="2" v-model="census" />&nbsp; 外地 </label>
+                <label><input name="huji" type="radio" value="1" v-model="census" />本地 </label>
+                <label><input name="huji" type="radio" value="2" v-model="census" />外地 </label>
               </div>
             </div>
           </div>
@@ -215,7 +215,7 @@
           </div>
           <div class="item-bg" v-if="houseListActive !== 0">
             <div class="item-100">
-              <label class="label-20"><span>*</span>客源人数</label>
+              <label class="label-20"><span>*</span>客源人数&nbsp;</label>
               <input type="text" name="" placeholder="请输入" v-model="clientCount" value="" class="text">
             </div>
           </div>
@@ -395,6 +395,9 @@ export default {
             setTimeout(() => {
               this.isSend = true
             }, 30)
+          } else {
+            this.confirmText = res.data.msg
+            this.$refs.confirm.show()
           }
         })
       } else {
@@ -447,6 +450,9 @@ export default {
             setTimeout(() => {
               this.isSend = true
             }, 30)
+          } else {
+            this.confirmText = res.data.msg
+            this.$refs.confirm.show()
           }
         })
       }
@@ -545,11 +551,10 @@ export default {
             vertical-align: middle
             line-height: 30px
             .label-25
-              width: 25%
+              width: 26%
               span
                 color: red
             .label-40
-              width: 40%
               span
                 color: red
             .text
@@ -573,7 +578,7 @@ export default {
                 width: 95%
                 margin-top: 10px
             p
-              width: 15%
+              width: 25%
               line-height: 18px
               span
                 color: red
@@ -591,7 +596,6 @@ export default {
             .label-height
               line-height: 30px
             .label-20
-              width: 20%
               line-height: 30px
               span
                 color: red
@@ -600,7 +604,7 @@ export default {
               span
                 color: red
               .select
-                width: 70%
+                width: 65%
                 height: 30px
                 border-radius: 4px
                 border: 1px solid #ccc
