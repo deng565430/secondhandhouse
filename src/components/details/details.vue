@@ -1,9 +1,11 @@
 <template>
 <div id="projectdetails">
+  <div class="mengceng" v-if="mengcengFlag">
+    <img :src="mengcengImg" alt="" @click="hideMengceng">
+  </div>
 	<div class="xqTitle">
   		<MyTitle :title="title"></MyTitle>
 	</div>
-
 	<Scroll ref="scroll" class="list" :data="contantsNews">
 	<div class="xqcontent">
 		<div class="publishPeople">
@@ -114,6 +116,7 @@ import Xqdetail from 'base/contant-detail/xiangyingdetail'
 import ConfirmMsg from 'base/confirm-msg/confirm-msg'
 import Confirm from 'base/confirm/confirm'
 import { getDetails, addBlackList, getDetailsNews, replyClientResponse, updateClientSourceStatus, refuseClientResponse, addClientResponse } from 'api/details.js'
+import { getFirstVisited } from 'api/getFirstVisited'
 import { timeFormat } from 'common/js/util.js'
 export default {
 
@@ -128,6 +131,8 @@ export default {
   },
   data () {
     return {
+      mengcengImg: require('common/image/mengceng005.jpg'),
+      mengcengFlag: false,
       projectDetailsList: {},
       phoneImg: require('common/image/telephone.png'),
       title: this.$route.query.mark === '2' ? '客源详情' : '房源详情',
@@ -159,9 +164,20 @@ export default {
     }
   },
   created () {
+    // 判断是否是首次访问
+    getFirstVisited('secondhousedetail').then(res => {
+      console.log(res.data)
+      if (res.data.data === 0) {
+        this.mengcengFlag = true
+      }
+    })
     this._getDetails()
   },
   methods: {
+    // 点击隐藏蒙层
+    hideMengceng () {
+      this.mengcengFlag = false
+    },
     zhankai () {
       if (!this.iszhankai) {
         this.iszhankai = true
@@ -330,6 +346,18 @@ export default {
 
 #projectdetails
   background: #f4f1f4
+  .mengceng
+    position: fixed
+    top: 0
+    left: 0
+    right: 0
+    buttom: 0
+    z-index: 999999
+    width: 100%
+    height: 100%
+    img
+      width: 100%
+      height: 100%
   .xqTitle
     position:fixed
     top: 0

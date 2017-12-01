@@ -1,5 +1,8 @@
 <template>
 <div id="recommendList">
+  <div class="mengceng" v-if="mengcengFlag">
+    <img :src="mengcengImg" alt="" @click="hideMengceng">
+  </div>
   <div class="title">
     <my-title :title="'二手房市场'"></my-title>
     <router-link tag="div" :to="{ path: '/projectlist' }" class="my-list">
@@ -81,9 +84,12 @@ import Confirm from 'base/confirm/confirm'
 import SelectBox from 'base/select-box/select-box'
 import PopBox from 'base/pop-box/pop-box'
 import { secondhHand, addClientResponse } from 'api/recommendList'
+import { getFirstVisited } from 'api/getFirstVisited'
 export default {
   data () {
     return {
+      mengcengImg: require('common/image/mengceng003.jpg'),
+      mengcengFlag: false,
       houseList: ['找房源', '找客源'],
       houseListActive: 0,
       projectId: '',
@@ -210,9 +216,20 @@ export default {
     }
   },
   created () {
+    // 判断是否是首次访问
+    getFirstVisited('secondhandhousehome').then(res => {
+      console.log(res.data)
+      if (res.data.data === 0) {
+        this.mengcengFlag = true
+      }
+    })
     this._secondhHand()
   },
   methods: {
+    // 点击隐藏蒙层
+    hideMengceng () {
+      this.mengcengFlag = false
+    },
     houseListEvent (item, index) {
       this.houseListActive = index
       this.showTypeList = false
@@ -446,6 +463,18 @@ export default {
     z-index: 99
     background: #eee
     font-size: $font-size-medium
+    .mengceng
+      position: fixed
+      top: 0
+      left: 0
+      right: 0
+      buttom: 0
+      z-index: 999999
+      width: 100%
+      height: 100%
+      img
+        width: 100%
+        height: 100%
     .title
       position: fixed
       width: 100%

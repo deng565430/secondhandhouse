@@ -31,6 +31,20 @@ export function trim (str) {
   return str.replace(/(^\s+)|(\s+$)/g, '')
 }
 
+// 去除空格
+export function trims(str) {
+  return str.replace(/(^\s+)|(\s+$)/g, '')
+}
+
+// 验证是否是数字
+export function checkNumber(theObj) {
+  var reg = /^[0-9]+.?[0-9]*$/
+  if (reg.test(theObj)) {
+    return true
+  }
+  return false
+}
+
 // 时间格式化
 export function timeFormat (fmt, time) {
   if (isNaN(time)) {

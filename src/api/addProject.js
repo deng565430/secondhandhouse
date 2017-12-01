@@ -40,3 +40,10 @@ export function secondHandSource (data) {
 
   return $api.post(url, data)
 }
+
+// 添加到一手房
+export function sendProject (data) {
+  const url = `/needs/add`
+
+  return $api.post(url, data)
+}

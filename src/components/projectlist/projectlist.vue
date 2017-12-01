@@ -1,5 +1,8 @@
 <template>
 <div id="projectlists">
+  <div class="mengceng" v-if="mengcengFlag">
+    <img :src="mengcengImg" alt="" @click="hideMengceng">
+  </div>
   <div class="titles">
 	 <MyTitle :title="title" ></MyTitle>
     </div>	
@@ -63,7 +66,7 @@ import Confirm from 'base/confirm/confirm'
 import Loading from 'base/loading/loading'
 import ProjectList from 'base/project-list/project-list.vue'
 import {getprojectList, getfabuNum, huifuList} from 'api/myList.js'
-
+import { getFirstVisited } from 'api/getFirstVisited'
 import fang1 from 'common/image/fang1.png'
 import fang2 from 'common/image/fang2.png'
 import people1 from 'common/image/people1.png'
@@ -80,6 +83,8 @@ export default {
   },
   data () {
     return {
+      mengcengImg: require('common/image/mengceng004.jpg'),
+      mengcengFlag: false,
       title: '我的列表',
       tabs: ['房源', '客源'],
       contentbat: ['全部', '待响应', '待联系', '已停止'],
@@ -122,11 +127,22 @@ export default {
     }
   },
   created () {
+    // 判断是否是首次访问
+    getFirstVisited('secondhouseprojectlist').then(res => {
+      console.log(res.data)
+      if (res.data.data === 0) {
+        this.mengcengFlag = true
+      }
+    })
     this.idnexcolor = 1
     this._getfabuNum(this.isfabu)
     this._getprojectList(this.startnum, 10, this.isfabu, this.isstatus)
   },
   methods: {
+    // 点击隐藏蒙层
+    hideMengceng () {
+      this.mengcengFlag = false
+    },
     // 获取 发布的房源
     _getfabuNum (fabu) {
       getfabuNum(fabu).then((res) => {
@@ -330,6 +346,18 @@ body, html
   color: #333 !important
   #projectlists
     background: #f4f1f4
+    .mengceng
+      position: fixed
+      top: 0
+      left: 0
+      right: 0
+      buttom: 0
+      z-index: 999999
+      width: 100%
+      height: 100%
+      img
+        width: 100%
+        height: 100%
     .titles
       position:fixed
       top: 0

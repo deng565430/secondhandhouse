@@ -13,7 +13,7 @@
           <div class="item-bg">
             <div class="item-50">
               <label class="label-25"><span>{{houseListActive === 0 ? '*' : ''}}</span>单价</label>
-              <input type="text" placeholder="请输入" v-model="price" name="" value="" class="text">
+              <input type="number" step="0.00001" placeholder="请输入" v-model="price" name="" value="" class="text">
               <span>元</span>
             </div>
             <div class="item-50" v-if="houseListActive === 0">
@@ -52,7 +52,7 @@
           </div>
           <div class="item-bg">
             <div class="item-100">
-              <p><span>*</span>楼层:</p>
+              <p><span></span>楼层:</p>
               <div class="radio">
                 <label><input name="Fruit" type="radio" v-model="floor" value="10002" />&nbsp; 低层 </label>
                 <label><input name="Fruit" type="radio" v-model="floor" value="10003" />&nbsp; 中层 </label>
@@ -63,19 +63,23 @@
           <div class="item-bg">
             <div class="item-50">
               <label class="label-40"><span></span>具体楼层</label>
-              <input type="text" placeholder="请输入" v-model="concreteFloor" name="" value="" class="text">
+              <input type="number" step="0.00001" placeholder="请输入" v-model="concreteFloor" name="" value="" class="text">
               <span>楼</span>
             </div>
-            <div class="item-50">
+          </div>
+          <div class="item-bg">
+            <div class="item-100">
               <label class="label-25"><span>*</span>面积</label>
-              <input type="text" placeholder="请输入" v-model="area" name="" value="" class="text">
-              <span>平方</span>
+              <input type="number" step="0.00001" placeholder="请输入" v-model="minarea" name="" value="" class="text area-ipt">
+              <span class="label-height">~</span>
+              <input type="number" step="0.00001" placeholder="请输入" v-model="area" name="" value="" class="text area-ipt">
+              <span class="label-height">平方</span>
             </div>
           </div>
           <div class="item-bg">
             <div class="item-50">
               <label class="label-25"><span>{{houseListActive === 0 ? '' : '*'}}</span>总价</label>
-              <input type="text" placeholder="请输入" v-model="totalPrice" name="" value="" class="text">
+              <input type="number" step="0.00001" placeholder="请输入" v-model="totalPrice" name="" value="" class="text">
               <span>万元</span>
             </div>
             <div class="item-50">
@@ -114,7 +118,7 @@
           <div class="item-bg">
             <div class="item-100">
               <label class="label-15"><span></span>物业费</label>
-              <input type="text" placeholder="请输入" v-model="propertyCosts" name="" value="" class="text">
+              <input type="number" step="0.00001" placeholder="请输入" v-model="propertyCosts" name="" value="" class="text">
               <span class="label-height">元/平方</span>
             </div>
           </div>
@@ -210,13 +214,14 @@
             </div>
             <div class="item-50">
               <label class="label-40"><span></span>首付预算</label>
-              <input type="text" placeholder="请输入" v-model="downPayment" name="" value="" class="text">
+              <input type="number" step="0.00001" placeholder="请输入" v-model="downPayment" name="" value="" class="text">
+              <span>万</span>
             </div>
           </div>
           <div class="item-bg" v-if="houseListActive !== 0">
             <div class="item-100">
               <label class="label-20"><span>*</span>客源人数&nbsp;</label>
-              <input type="text" name="" placeholder="请输入" v-model="clientCount" value="" class="text">
+              <input type="number" step="0.00001" name="" placeholder="请输入" v-model="clientCount" value="" class="text">
             </div>
           </div>
           <div class="item-bg">
@@ -241,8 +246,9 @@
 </template>
 
 <script>
-import { getProvincelist, getDistirctlist, getCitylist, getTypeList, secondHandRoom, secondHandSource } from 'api/addProject'
+import { getProvincelist, getDistirctlist, getCitylist, getTypeList, secondHandRoom, secondHandSource, sendProject } from 'api/addProject'
 import MyTitle from 'base/title/title'
+import { trims, checkNumber } from 'common/js/util'
 import Scroll from 'base/scroll/scroll'
 import Confirm from 'base/confirm/confirm'
 export default {
@@ -269,6 +275,7 @@ export default {
       floor: null,
       concreteFloor: null,
       area: null,
+      minarea: null,
       totalPrice: null,
       propertyCosts: null,
       room: -1,
@@ -293,20 +300,65 @@ export default {
   },
   methods: {
     send (e) {
+      checkNumber('23')
+      if (this.price !== null) {
+        if (!checkNumber(this.price)) {
+          this.confirmText = '单价必须为数值型'
+          this.$refs.confirm.show()
+          return
+        }
+      }
       if (this.type === -1) {
         this.confirmText = '请选择物业类型'
         this.$refs.confirm.show()
         return
       }
-      if (this.floor === null) {
-        this.confirmText = '请选择楼层'
+      if (this.concreteFloor !== null) {
+        if (!checkNumber(this.concreteFloor)) {
+          this.confirmText = '具体楼层必须为数值型'
+          this.$refs.confirm.show()
+          return
+        }
+      }
+      if (this.minarea === null || this.area === null) {
+        this.confirmText = '请输入面积范围'
         this.$refs.confirm.show()
         return
       }
-      if (this.area === null) {
-        this.confirmText = '请输入面积'
-        this.$refs.confirm.show()
-        return
+      if (this.minarea !== null || this.area) {
+        if (!checkNumber(this.minarea) || !checkNumber(this.area)) {
+          this.confirmText = '面积必须为数值型'
+          this.$refs.confirm.show()
+          return
+        }
+      }
+      if (this.totalPrice !== null) {
+        if (!checkNumber(this.totalPrice)) {
+          this.confirmText = '总价必须为数值型'
+          this.$refs.confirm.show()
+          return
+        }
+      }
+      if (this.propertyCosts !== null) {
+        if (!checkNumber(this.propertyCosts)) {
+          this.confirmText = '物业费必须为数值型'
+          this.$refs.confirm.show()
+          return
+        }
+      }
+      if (this.downPayment !== null) {
+        if (!checkNumber(this.downPayment)) {
+          this.confirmText = '首付预算必须为数值型'
+          this.$refs.confirm.show()
+          return
+        }
+      }
+      if (this.clientCount !== null) {
+        if (!checkNumber(this.clientCount)) {
+          this.confirmText = '客源人数必须为数值型'
+          this.$refs.confirm.show()
+          return
+        }
       }
       if (this.province === '全部') {
         this.confirmText = '请选择省份'
@@ -385,20 +437,25 @@ export default {
           hall: this.hall,
           greenRate: this.greenRate === -1 ? null : this.greenRate,
           remark: this.remark,
+          minarea: this.minarea,
           area: this.area
         }
         secondHandRoom(data).then(res => {
           console.log(res)
+          if (!res.data) {
+            this.confirmText = '系统错误,请重试'
+            this.$refs.confirm.show()
+          }
           if (res.data.code === 0) {
             this.confirmText = '提交成功'
             this.$refs.confirm.show()
-            setTimeout(() => {
-              this.isSend = true
-            }, 30)
           } else {
             this.confirmText = res.data.msg
             this.$refs.confirm.show()
           }
+          setTimeout(() => {
+            this.isSend = true
+          }, 30)
         })
       } else {
         if (this.totalPrice === null) {
@@ -440,25 +497,52 @@ export default {
           social: this.social === -1 ? null : this.social,
           downPayment: this.downPayment === -1 ? null : this.downPayment,
           clientCount: this.clientCount,
+          minarea: this.minarea,
           area: this.area
+        }
+        const oneData = {
+          prov: this.province,
+          city: this.city,
+          district: this.district ? this.district : null,
+          clientcount: this.clientCount ? this.clientCount : null,
+          start_area: trims(this.minarea) ? trims(this.minarea) : null,
+          end_area: trims(this.area) ? trims(this.area) : null,
+          price: this.price ? this.price : null,
+          type: this.type === -1 ? null : this.type,
+          scale: this.downPayment === -1 ? null : this.downPayment,
+          room: this.room === -1 ? null : this.room,
+          hall: this.hall === -1 ? null : this.hall,
+          census: this.census ? this.census : null,
+          floor: this.floor ? this.floor : null,
+          ensure: this.social === -1 ? null : this.social,
+          decoration: this.decoration === -1 ? null : this.decoration,
+          msg: this.remark ? this.remark : null,
+          needs_name: null
         }
         secondHandSource(data).then(res => {
           console.log(res)
-          if (res.data.code === 0) {
-            this.confirmText = '提交成功'
+          if (!res.data) {
+            this.confirmText = '系统错误,请重试'
             this.$refs.confirm.show()
-            setTimeout(() => {
-              this.isSend = true
-            }, 30)
+          }
+          if (res.data.code === 0) {
+            this.confirmText = '您的信息已发布,并同步到一手房市场'
+            this.$refs.confirm.show()
           } else {
             this.confirmText = res.data.msg
             this.$refs.confirm.show()
           }
+          setTimeout(() => {
+            this.isSend = true
+          }, 30)
+        })
+        sendProject(oneData).then(res => {
+          console.log(res)
         })
       }
     },
     confirm (data) {
-      if (this.confirmText === '提交成功') {
+      if (this.confirmText === '提交成功' || this.confirmText === '您的信息已发布,并同步到一手房市场') {
         this.$router.push('/')
       }
     },
@@ -593,6 +677,13 @@ export default {
               line-height: 30px
               span
                 color: red
+            .area-ipt
+              width: 25%
+            .label-25
+              width: 15%
+              line-height: 30px
+              span
+                color: red      
             .label-height
               line-height: 30px
             .label-20
