@@ -240,7 +240,7 @@
     </scroll>
   </div>
   <div>
-    <confirm ref="confirm" :text="confirmText" :refresh="refresh" @confirm="confirm"></confirm>
+    <confirm ref="confirm" :flag="isShowCancel" :text="confirmText" :refresh="refresh" @confirm="confirm"></confirm>
   </div>
 </div>
 </template>
@@ -257,6 +257,7 @@ export default {
     return {
       title: `发布${this.$route.params.mark === '0' ? '房源' : '客源'}需求`,
       confirmText: '请填写完整',
+      isShowCancel: true,
       isDisable: false,
       isSend: true,
       houseList: ['房源', '客源'],
@@ -300,7 +301,8 @@ export default {
   },
   methods: {
     send (e) {
-      checkNumber('23')
+      this.confirmText = '确认发布'
+      this.$refs.confirm.show()
       if (this.price !== null) {
         if (!checkNumber(this.price)) {
           this.confirmText = '单价必须为数值型'
@@ -416,47 +418,6 @@ export default {
           this.$refs.confirm.show()
           return
         }
-        this.isSend = false
-        const data = {
-          name: this.name,
-          price: this.price,
-          totalPrice: this.totalPrice,
-          prov: this.province,
-          city: this.city,
-          district: this.district,
-          balcony: this.balcony,
-          face: this.face,
-          type: this.type,
-          floor: this.floor,
-          concreteFloor: this.concreteFloor,
-          roomAge: this.roomAge,
-          decoration: this.decoration,
-          elevator: this.elevator,
-          propertyCosts: this.propertyCosts,
-          room: this.room,
-          hall: this.hall,
-          greenRate: this.greenRate === -1 ? null : this.greenRate,
-          remark: this.remark,
-          minarea: this.minarea,
-          area: this.area
-        }
-        secondHandRoom(data).then(res => {
-          console.log(res)
-          if (!res.data) {
-            this.confirmText = '系统错误,请重试'
-            this.$refs.confirm.show()
-          }
-          if (res.data.code === 0) {
-            this.confirmText = '提交成功'
-            this.$refs.confirm.show()
-          } else {
-            this.confirmText = res.data.msg
-            this.$refs.confirm.show()
-          }
-          setTimeout(() => {
-            this.isSend = true
-          }, 30)
-        })
       } else {
         if (this.totalPrice === null) {
           this.confirmText = '请输入总价'
@@ -473,81 +434,118 @@ export default {
           this.$refs.confirm.show()
           return
         }
-        this.isSend = false
-        const data = {
-          name: this.name,
-          price: this.price,
-          totalPrice: this.totalPrice,
-          prov: this.province,
-          city: this.city,
-          district: this.district,
-          face: this.face === -1 ? null : this.face,
-          type: this.type === -1 ? null : this.type,
-          floor: this.floor,
-          concreteFloor: this.concreteFloor,
-          roomAge: this.roomAge === -1 ? null : this.roomAge,
-          decoration: this.decoration === -1 ? null : this.decoration,
-          elevator: this.elevator,
-          propertyCosts: this.propertyCosts,
-          room: this.room === -1 ? null : this.room,
-          hall: this.hall === -1 ? null : this.hall,
-          greenRate: this.greenRate === -1 ? null : this.greenRate,
-          remark: this.remark,
-          census: this.census,
-          social: this.social === -1 ? null : this.social,
-          downPayment: this.downPayment === -1 ? null : this.downPayment,
-          clientCount: this.clientCount,
-          minarea: this.minarea,
-          area: this.area
-        }
-        const oneData = {
-          prov: this.province,
-          city: this.city,
-          district: this.district ? this.district : null,
-          clientcount: this.clientCount ? this.clientCount : null,
-          start_area: trims(this.minarea) ? trims(this.minarea) : null,
-          end_area: trims(this.area) ? trims(this.area) : null,
-          price: this.price ? this.price : null,
-          type: this.type === -1 ? null : this.type,
-          scale: this.downPayment === -1 ? null : this.downPayment,
-          room: this.room === -1 ? null : this.room,
-          hall: this.hall === -1 ? null : this.hall,
-          census: this.census ? this.census : null,
-          floor: this.floor ? this.floor : null,
-          ensure: this.social === -1 ? null : this.social,
-          decoration: this.decoration === -1 ? null : this.decoration,
-          msg: this.remark ? this.remark : null,
-          needs_name: null
-        }
-        secondHandSource(data).then(res => {
-          console.log(res)
-          if (!res.data) {
-            this.confirmText = '系统错误,请重试'
-            this.$refs.confirm.show()
-          }
-          if (res.data.code === 0) {
-            this.confirmText = '您的信息已发布,并同步到一手房市场'
-            this.$refs.confirm.show()
-          } else {
-            this.confirmText = res.data.msg
-            this.$refs.confirm.show()
-          }
-          setTimeout(() => {
-            this.isSend = true
-          }, 30)
-        })
-        sendProject(oneData).then(res => {
-          console.log(res)
-        })
       }
+      this.confirmText = '确定发布'
+      this.$refs.confirm.show()
     },
     confirm (data) {
+      this.isShowCancel = true
+      if (this.confirmText === '确定发布') {
+        this.isShowCancel = false
+        if (this.houseListActive === 0) {
+          const data = {
+            name: this.name,
+            price: this.price,
+            totalPrice: this.totalPrice,
+            prov: this.province,
+            city: this.city,
+            district: this.district,
+            balcony: this.balcony,
+            face: this.face,
+            type: this.type,
+            floor: this.floor,
+            concreteFloor: this.concreteFloor,
+            roomAge: this.roomAge,
+            decoration: this.decoration,
+            elevator: this.elevator,
+            propertyCosts: this.propertyCosts,
+            room: this.room,
+            hall: this.hall,
+            greenRate: this.greenRate === -1 ? null : this.greenRate,
+            remark: this.remark,
+            minarea: this.minarea,
+            area: this.area
+          }
+          secondHandRoom(data).then(res => {
+            console.log(res)
+            if (!res.data) {
+              this.confirmText = '系统错误,请重试'
+              this.$refs.confirm.show()
+            }
+            if (res.data.code === 0) {
+              this.confirmText = '提交成功'
+              this.$refs.confirm.show()
+            } else {
+              this.confirmText = res.data.msg
+              this.$refs.confirm.show()
+            }
+          })
+        } else if (this.houseListActive === 1) {
+          const data = {
+            name: this.name,
+            price: this.price,
+            totalPrice: this.totalPrice,
+            prov: this.province,
+            city: this.city,
+            district: this.district,
+            face: this.face === -1 ? null : this.face,
+            type: this.type === -1 ? null : this.type,
+            floor: this.floor,
+            concreteFloor: this.concreteFloor,
+            roomAge: this.roomAge === -1 ? null : this.roomAge,
+            decoration: this.decoration === -1 ? null : this.decoration,
+            elevator: this.elevator,
+            propertyCosts: this.propertyCosts,
+            room: this.room === -1 ? null : this.room,
+            hall: this.hall === -1 ? null : this.hall,
+            greenRate: this.greenRate === -1 ? null : this.greenRate,
+            remark: this.remark,
+            census: this.census,
+            social: this.social === -1 ? null : this.social,
+            downPayment: this.downPayment === -1 ? null : this.downPayment,
+            clientCount: this.clientCount,
+            minarea: this.minarea,
+            area: this.area
+          }
+          const oneData = {
+            prov: this.province,
+            city: this.city,
+            district: this.district ? this.district : null,
+            clientcount: this.clientCount ? this.clientCount : null,
+            start_area: trims(this.minarea) ? trims(this.minarea) : null,
+            end_area: trims(this.area) ? trims(this.area) : null,
+            price: this.price ? this.price : null,
+            type: this.type === -1 ? null : this.type,
+            scale: this.downPayment === -1 ? null : this.downPayment,
+            room: this.room === -1 ? null : this.room,
+            hall: this.hall === -1 ? null : this.hall,
+            census: this.census ? this.census : null,
+            floor: this.floor ? this.floor : null,
+            ensure: this.social === -1 ? null : this.social,
+            decoration: this.decoration === -1 ? null : this.decoration,
+            msg: this.remark ? this.remark : null,
+            needs_name: null
+          }
+          secondHandSource(data).then(res => {
+            if (!res.data) {
+              this.confirmText = '系统错误,请重试'
+              this.$refs.confirm.show()
+            }
+            if (res.data.code === 0) {
+              this.confirmText = '您的信息已发布,并同步到一手房市场'
+              this.$refs.confirm.show()
+            } else {
+              this.confirmText = res.data.msg
+              this.$refs.confirm.show()
+            }
+          })
+          sendProject(oneData).then(res => {})
+        }
+      }
       if (this.confirmText === '提交成功' || this.confirmText === '您的信息已发布,并同步到一手房市场') {
         this.$router.push('/')
       }
     },
-    confirmClear() {},
-    confirmBtnText() {},
     selectProvince() {
       this.city = '全部'
       this.district = '全部'
