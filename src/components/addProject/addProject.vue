@@ -514,7 +514,7 @@ export default {
             clientcount: this.clientCount ? this.clientCount : null,
             start_area: trims(this.minarea) ? trims(this.minarea) : null,
             end_area: trims(this.area) ? trims(this.area) : null,
-            price: this.price ? this.price : null,
+            price: this.totalPrice ? this.totalPrice : null,
             type: this.type === -1 ? null : this.type,
             scale: this.downPayment === -1 ? null : this.downPayment,
             room: this.room === -1 ? null : this.room,
