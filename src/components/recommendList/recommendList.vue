@@ -218,7 +218,6 @@ export default {
   created () {
     // 判断是否是首次访问
     getFirstVisited('secondhandhousehome').then(res => {
-      console.log(res.data)
       if (res.data.data === 0) {
         this.mengcengFlag = true
       }
@@ -270,7 +269,6 @@ export default {
     },
     // 区域条件筛选
     selectTypeList (item, index) {
-      console.log(index)
       this.itemSelectTypeActive = index
       if (index === 0) {
         this.showCitysList = true
@@ -304,7 +302,6 @@ export default {
     // 确定选择
     selectTypeConfirm () {
       if (this.typeList[0].minPrice !== undefined || this.typeList[0].maxPrice !== undefined) {
-        console.log(this.selectTypeIndexRoom)
         if (this.selectTypeIndexRoom === -1) {
           this.itemSelectType[this.itemSelectTypeActive].type = '总价'
           this.sendData.minPrice = null
@@ -328,7 +325,6 @@ export default {
           this.itemSelectType[this.itemSelectTypeActive].type = data
         }
       }
-      console.log(this.sendData)
       this._secondhHand()
       this.selectTypeIndexRoom = -1
       this.selectTypeIndexHall = -1
@@ -344,11 +340,11 @@ export default {
       this.sendData.prov = data.provinceActive
       this.sendData.city = data.cityActive
       this.sendData.district = data.districtlistActive
-      if (data.districtlistActive !== '' && data.districtlistActive !== null) {
+      if (data.districtlistActive !== '' && data.districtlistActive !== '全部' && data.districtlistActive !== null) {
         this.itemSelectType[this.itemSelectTypeActive].type = data.districtlistActive
-      } else if (data.cityActive !== '' && data.cityActive !== null) {
+      } else if (data.cityActive !== '' && data.cityActive !== '全部' && data.cityActive !== null) {
         this.itemSelectType[this.itemSelectTypeActive].type = data.cityActive
-      } else if (data.provinceActive !== '' && data.provinceActive !== null) {
+      } else if (data.provinceActive !== '' && data.provinceActive !== '全部' && data.provinceActive !== null) {
         this.itemSelectType[this.itemSelectTypeActive].type = data.provinceActive
       } else {
         this.itemSelectType[this.itemSelectTypeActive].type = '区域'
@@ -367,7 +363,6 @@ export default {
         id: this.projectId,
         msg: msg.msg
       }
-      console.log(this.projectId)
       this._addClientResponse(data)
     },
     confirm () {
@@ -418,14 +413,12 @@ export default {
             this.noResultWrapper = '没有更多了'
           }
           this.projectList = res.data.data
-          console.log(this.projectList)
         }
       })
     },
     _addClientResponse (data) {
       const self = this
       addClientResponse(data).then(res => {
-        console.log(res)
         if (res.data.code === 0) {
           self.projectList.filter(function (item) {
             if (item.roomId === self.projectId) {

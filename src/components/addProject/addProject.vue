@@ -127,21 +127,21 @@
               <label class="label-33"><span>*</span>省:
                   <select name="" class="select" v-model="province" @change="selectProvince" v-if="!isDisable">
                     <option value="全部" selected="selected">全部</option>
-                    <option :key="item" v-for="item in provinceList">{{item}}</option>
+                    <option :key="item.key" :value="item" v-for="item in provinceList">{{item.value}}</option>
                   </select>
                   <input v-else type="text" name="" v-model="province">
                 </label>
               <label class="label-33"><span>*</span>市:
                   <select name="" class="select" v-model="city" @change="selectCity" v-if="!isDisable">
                     <option value="全部" selected="selected">全部</option>
-                    <option :key="item" v-for="item in cityList">{{item}}</option>
+                    <option :key="item.key" :value="item" v-for="item in cityList">{{item.value}}</option>
                   </select>
                   <input v-else type="text" name="" v-model="city">
                 </label>
               <label class="label-33"><span>*</span>区:
                   <select name="" class="select" v-model="district" @change="selectDistrict" v-if="!isDisable">
                     <option value="全部" selected="selected">全部</option>
-                    <option :key="item" v-for="item in districtList">{{item}}</option>
+                    <option :key="item.key" :value="item" v-for="item in districtList">{{item.value}}</option>
                   </select>
                   <input v-else type="text" name="" v-model="district">
                 </label>
@@ -246,7 +246,8 @@
 </template>
 
 <script>
-import { getProvincelist, getDistirctlist, getCitylist, getTypeList, secondHandRoom, secondHandSource, sendProject } from 'api/addProject'
+import { getTypeList, secondHandRoom, secondHandSource, sendProject } from 'api/addProject'
+import { getProvincelist, getDistirctlist, getCitylist } from 'api/getCity'
 import MyTitle from 'base/title/title'
 import { trims, checkNumber } from 'common/js/util'
 import Scroll from 'base/scroll/scroll'
@@ -447,9 +448,9 @@ export default {
             name: this.name,
             price: this.price,
             totalPrice: this.totalPrice,
-            prov: this.province,
-            city: this.city,
-            district: this.district,
+            prov: this.province.value,
+            city: this.city.value,
+            district: this.district.value,
             balcony: this.balcony,
             face: this.face,
             type: this.type,
@@ -485,9 +486,9 @@ export default {
             name: this.name,
             price: this.price,
             totalPrice: this.totalPrice,
-            prov: this.province,
-            city: this.city,
-            district: this.district,
+            prov: this.province.value,
+            city: this.city.value,
+            district: this.district.value,
             face: this.face === -1 ? null : this.face,
             type: this.type === -1 ? null : this.type,
             floor: this.floor,
@@ -508,9 +509,9 @@ export default {
             area: this.area
           }
           const oneData = {
-            prov: this.province,
-            city: this.city,
-            district: this.district ? this.district : null,
+            prov: this.province.value,
+            city: this.city.value,
+            district: this.district && this.district.value ? this.district.value : null,
             clientcount: this.clientCount ? this.clientCount : null,
             start_area: trims(this.minarea) ? trims(this.minarea) : null,
             end_area: trims(this.area) ? trims(this.area) : null,
@@ -550,7 +551,7 @@ export default {
       this.city = '全部'
       this.district = '全部'
       this.cityList = []
-      getCitylist(this.province).then(res => {
+      getCitylist(this.province.key).then(res => {
         this.cityList = res.data.data
       })
     },
@@ -560,7 +561,7 @@ export default {
         return
       }
       this.districtList = []
-      getDistirctlist(this.province, this.city).then(res => {
+      getDistirctlist(this.province.key, this.city.key).then(res => {
         this.districtList = res.data.data
       })
     },
@@ -681,7 +682,7 @@ export default {
               width: 15%
               line-height: 30px
               span
-                color: red      
+                color: red
             .label-height
               line-height: 30px
             .label-20

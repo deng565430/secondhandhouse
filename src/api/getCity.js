@@ -1,24 +1,22 @@
 import $api from './api'
 
-export function getProvincelist () {
-  const url = '/pro/getProvincelist'
+// 省
+export function getProvincelist() {
+  const url = `/projectnewest/getprovince`
 
   return $api.get(url)
 }
 
-export function getDistirctlist (province, city) {
-  const url = '/pro/getDistirctlist'
+// 市
+export function getCitylist(data) {
+  const url = `/projectnewest/getcity?proCode=${data}`
 
-  const data = {
-    province,
-    city
-  }
-
-  return $api.post(url, data)
+  return $api.get(url)
 }
 
-export function getCitylist (data) {
-  const url = `/pro/getCitylist?city=${data}`
+// 区
+export function getDistirctlist(province, city) {
+  const url = `/projectnewest/getdistrict?cityCode=${city}`
 
-  return $api.post(url)
+  return $api.get(url)
 }
