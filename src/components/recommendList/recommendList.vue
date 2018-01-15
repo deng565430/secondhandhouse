@@ -85,6 +85,8 @@ import SelectBox from 'base/select-box/select-box'
 import PopBox from 'base/pop-box/pop-box'
 import { secondhHand, addClientResponse } from 'api/recommendList'
 import { getFirstVisited } from 'api/getFirstVisited'
+import TYPE from 'common/js/buryingpointType'
+import { addLog } from 'api/buryingpoint'
 export default {
   data () {
     return {
@@ -222,6 +224,9 @@ export default {
         this.mengcengFlag = true
       }
     })
+    setTimeout(function () {
+      addLog(TYPE.HOME, '', '', '', window.USERMSG)
+    }, 1500)
     this._secondhHand()
   },
   methods: {

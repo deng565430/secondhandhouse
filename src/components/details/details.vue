@@ -118,6 +118,8 @@ import Confirm from 'base/confirm/confirm'
 import { getDetails, addBlackList, getDetailsNews, replyClientResponse, updateClientSourceStatus, refuseClientResponse, addClientResponse } from 'api/details.js'
 import { getFirstVisited } from 'api/getFirstVisited'
 import { timeFormat } from 'common/js/util.js'
+import TYPE from 'common/js/buryingpointType'
+import { addLog } from 'api/buryingpoint'
 export default {
 
   name: 'details',
@@ -166,11 +168,13 @@ export default {
   created () {
     // 判断是否是首次访问
     getFirstVisited('secondhousedetail').then(res => {
-      console.log(res.data)
       if (res.data.data === 0) {
         this.mengcengFlag = true
       }
     })
+    setTimeout(function () {
+      addLog(TYPE.ERSHOUFANGXIANGQING, '', '', '', window.USERMSG)
+    }, 1500)
     this._getDetails()
   },
   methods: {
@@ -414,7 +418,7 @@ export default {
              color: #e5672c
          .phone-img
           width: 12px
-          vertical-align: middle    
+          vertical-align: middle
         .footer
          height: 46px
          line-height: 46px

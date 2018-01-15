@@ -252,6 +252,8 @@ import MyTitle from 'base/title/title'
 import { trims, checkNumber } from 'common/js/util'
 import Scroll from 'base/scroll/scroll'
 import Confirm from 'base/confirm/confirm'
+import TYPE from 'common/js/buryingpointType'
+import { addLog } from 'api/buryingpoint'
 export default {
   name: 'addProject',
   data () {
@@ -297,6 +299,15 @@ export default {
     }
   },
   created () {
+    if (this.$route.params.mark === '0') {
+      setTimeout(function () {
+        addLog(TYPE.ADDFANGYUAN, '', '', '', window.USERMSG)
+      }, 1500)
+    } else {
+      setTimeout(function () {
+        addLog(TYPE.ADDKEYUAN, '', '', '', window.USERMSG)
+      }, 1500)
+    }
     this._getProvincelist()
     this._getTypeList()
   },

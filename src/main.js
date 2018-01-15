@@ -10,6 +10,9 @@ import { routerMode } from './config/env'
 import './config/rem'
 import VueLazyload from 'vue-lazyload'
 
+/* eslint-disble no-unused-vars */
+import 'common/js/usermsg.js'
+
 import 'common/stylus/index.styl'
 // import 'common/js/clickEffect.js'
 

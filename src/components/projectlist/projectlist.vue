@@ -5,7 +5,7 @@
   </div>
   <div class="titles">
 	 <MyTitle :title="title" ></MyTitle>
-    </div>	
+    </div>
   <div class="contants">
   	<div class="headertabs">
     <!-- 发布响应切换 -->
@@ -14,8 +14,8 @@
 	    </select> -->
       <!-- 房源客源切换 -->
   		<!-- <ul class="tabbtn">
-          <li 
-          v-for="(itme, index) in tabs" 
+          <li
+          v-for="(itme, index) in tabs"
           :class="bkindex === index ? 'active': ''"
           @click="tabsqh(index)">{{itme}}</li>
         </ul> -->
@@ -29,14 +29,14 @@
   	<div class="contanttab">
     <!-- 三种状态切换 -->
   		<ul class="ctwrap">
-  			<li 
+  			<li
         class=""
-  			v-for="(itme, index) in contentbat" 
+  			v-for="(itme, index) in contentbat"
             :class="bdactive === index ? 'active': ''"
             @click="contenttab(index)">{{itme.status}}<span style="color:#e5672c">{{itme.count}}</span></li>
   		</ul>
-  		<Scroll 
-  		:data="myprojects" 
+  		<Scroll
+  		:data="myprojects"
         :pullup='pullup'
   		@scrollToEnd="scrollToEnd"
   		class="list">
@@ -53,7 +53,7 @@
   		</Scroll>
   	</div>
   </div>
-  <Confirm ref="confirms" 
+  <Confirm ref="confirms"
   :text="confirmtext"
   @confirm="confirm"></Confirm>
 </div>
@@ -67,6 +67,8 @@ import Loading from 'base/loading/loading'
 import ProjectList from 'base/project-list/project-list.vue'
 import {getprojectList, getfabuNum, huifuList} from 'api/myList.js'
 import { getFirstVisited } from 'api/getFirstVisited'
+import TYPE from 'common/js/buryingpointType'
+import { addLog } from 'api/buryingpoint'
 import fang1 from 'common/image/fang1.png'
 import fang2 from 'common/image/fang2.png'
 import people1 from 'common/image/people1.png'
@@ -134,6 +136,9 @@ export default {
         this.mengcengFlag = true
       }
     })
+    setTimeout(function () {
+      addLog(TYPE.ERSHOUFANGXIANGQING, '', '', '', window.USERMSG)
+    }, 1500)
     this.idnexcolor = 1
     this._getfabuNum(this.isfabu)
     this._getprojectList(this.startnum, 10, this.isfabu, this.isstatus)
@@ -403,7 +408,7 @@ body, html
              img
                width: 20px
            .actives
-             background: #f2f2f2 
+             background: #f2f2f2
          .selectcss
            position: absolute
            left: 10px
@@ -469,7 +474,7 @@ body, html
              border-bottom: 1px solid #d2d2d2
              color: #a2a2a2
            li:last-child
-             border-right: 0 
+             border-right: 0
            .active
              border-bottom: 2px solid #ff5500
              color: #000
